@@ -88,7 +88,7 @@ Previous
         </span> */}
 
         <span className="flex gap-4 items-center border border-[#D0D5DD] bg-white-1  px-4 shadow-table-button rounded-lg">
-         {pages.map(page =>  <span className={`hover:bg-[#D0D5DD] p-4 cursor-pointer ${currentPage === (page) && 'bg-[#D0D5DD]'}`} onClick={()=> setCurrentPage(page)} disabled={currentPage === 0}>{page + 1} </span>)}
+         {pages.map(page =>  <span key={page} className={`hover:bg-[#D0D5DD] p-4 cursor-pointer ${currentPage === (page) && 'bg-[#D0D5DD]'}`} onClick={()=> setCurrentPage(page)} disabled={currentPage === 0}>{page + 1} </span>)}
         </span>
 
 
