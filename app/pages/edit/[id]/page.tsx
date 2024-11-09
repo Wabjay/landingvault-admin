@@ -19,7 +19,28 @@ import { SelectStyle } from "@/components/selections/SelectStyle";
 import { SelectType } from "@/components/selections/SelectType";
 import { createSlug } from "@/components/blocks/slug";
 
-export default function UpdatePitch() {
+// Define types
+interface Page {
+  _id: string;
+  pageImage: string;
+  pageCoverImage: string;
+  brandName: string;
+  brandDescription: string;
+  websiteUrl: string;
+  componentType: string[];
+  industry: string[];
+  stacks: string[];
+  style: string[];
+  type: string[];
+  mode: string;
+  colorPalette: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  id: string;
+}
+
+export default function UpdatePage() {
   const { token, setIsComponentLoading, fetchSinglePage, page: pageData } = store();
   const pathname = usePathname();
   const router = useRouter();
@@ -59,9 +80,13 @@ export default function UpdatePitch() {
         ...page,
       });
     }
-  }, [pageData]);
+  }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -73,7 +98,7 @@ export default function UpdatePitch() {
     setFormData({ ...formData, pageImage: res });
   };
 
-  const handleFormDataUpdate = (res: { name: string; value: string[] }) => {
+  const handleFormDataUpdate = (res: { name: string; value: string[] | string }) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
@@ -105,11 +130,11 @@ export default function UpdatePitch() {
         __v: 0,
         id: "",
       });
-      router.push(`pages/${createSlug(formData.brandName)}`);
+      router.push(`/pages/${createSlug(formData.brandName)}`);
       Notification("Page Updated Successfully");
     } catch (error) {
-      Notification("Error Uploading Pitch");
-      console.error("Error fetching data:", error);
+      Notification("Error Updating Page");
+      console.error("Error updating page:", error);
     } finally {
       setIsComponentLoading(false);
     }
@@ -130,30 +155,24 @@ export default function UpdatePitch() {
 
           <div className="w-full px-4 tablet:px-6 laptop:px-0 flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
             <div className="w-full flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
-              <ImageCover coverImage={getImage} coverPath="coverImages" uploaded={formData?.pageCoverImage} />
+              <ImageCover coverImage={getImage} coverPath="coverImages" uploaded={formData.pageCoverImage} />
             </div>
 
             <InputField name="brandName" label="Enter website name" placeholder="Title..." value={formData.brandName} onChange={handleChange} />
 
-            <TextAreaField name="brandDescription" label="About" placeholder="Describe Pitch deck" value={formData.brandDescription} onChange={handleChange} />
+            <TextAreaField name="brandDescription" label="About" placeholder="Describe Pitch deck" value={formData.brandDescription} onChange={handleTextChange} />
 
-            
             <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType} onChange={handleFormDataUpdate} />
-            
             <SelectField name="industry" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
-
             <SelectField name="stacks" label="Stack" component={SelectStack} value={formData.stacks} onChange={handleFormDataUpdate} />
-
             <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
-
             <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
-               
-               <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
-            
+            <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
+
             <InputField name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
 
             <div className="w-full flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
-              <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData?.pageImage} />
+              <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData.pageImage} />
             </div>
           </div>
         </div>
@@ -162,13 +181,12 @@ export default function UpdatePitch() {
   );
 }
 
-
 interface InputFieldProps {
   name: string;
   label: string;
   placeholder: string;
   value: string | number;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
 }
 
@@ -202,7 +220,7 @@ const TextAreaField = ({ name, label, placeholder, value, onChange }: TextAreaFi
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className="w-full text-16 text-grey-900  h-[121px] px-4 py-6 border border-[#C1C9C8]"
+      className="w-full text-16 text-grey-900 h-[121px] px-4 py-6 border border-[#C1C9C8]"
       showCount
       style={{ resize: "none" }}
     />
@@ -212,18 +230,17 @@ const TextAreaField = ({ name, label, placeholder, value, onChange }: TextAreaFi
 interface SelectFieldProps {
   name: string;
   label: string;
-  component: React.ComponentType<{ value: (res: { name: string; value: string[] }) => void; initialValue: string[] }>;
-  value: string[]; // Updated to support multiple values
-  onChange: (res: { name: string; value: string[] }) => void;
+  component: React.ComponentType<{ value: (res: { name: string; value: string[] }) => void; initialValue: string[] | string }>;
+  value: string[] | string;
+  onChange: (res: { name: string; value: string[] | string }) => void;
 }
 
 const SelectField = ({ name, label, component: Component, value, onChange }: SelectFieldProps) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
-    {/* Pass name, value, and initialValue correctly to the Component */}
     <Component
       value={(res) => onChange({ name, value: res.value })}
-      initialValue={value} // initialValue supports string[]
+      initialValue={value}
     />
   </div>
 );

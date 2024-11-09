@@ -2,29 +2,21 @@
 import { Key, useEffect, useState } from "react";
 import PageCard from "@/components/Pages/PageCard";
 import EmptyPitch from "@/components/Pitchdeck/EmptyPitch";
-// import { page, PagesProps } from "@/types";
-import { useFetchData } from "@/lib/fetchData";
 import { store } from "@/stores/store";
-import { pagesData } from "@/data/dummyDatas";
 import Link from "next/link";
 
 
 
 const Pages = () => {
   const [array, setArray] = useState<Page[]>([]);
-  // const [pages, setPages] = useState<PagesProps>({});
 
-  const { getPages } = useFetchData();
   const {componentLoading, fetchAllPages, pages:pagesData} = store()
   
   
   
     useEffect(() => {
-      getPages()
       fetchAllPages()
-      // setPages(pagesData)
-      console.log(pagesData)
-    }, []);
+    }, [fetchAllPages]);
   
   
     
@@ -67,7 +59,7 @@ const Pages = () => {
     <EmptyPitch />
   ) : (
         <div className="w-full max-w-[906px] flex flex-wrap gap-4 gap-y-10 mt-10">
-      {array.map((item: page, index: Key | null | undefined) => (
+      {array.map((item: Page, index: Key | null | undefined) => (
           <PageCard key={index} page={item} />
         ))}
         </div>)}

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import { Select } from "antd";
-import { tagss } from "@/data/dummyDatas";
+import { store } from "@/stores/store";
 
 interface Tag {
   _id: string;
+  title: string;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -13,61 +14,44 @@ interface Tag {
 
 interface SelectCategoryTypeProps {
   value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  initialValue: string[] | string;
 }
-
 export function SelectPageType({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
-
-  const getTags = async () => {
-    try {
-      const response = await axios.get<{ tags: Tag[] }>("/tag/tags");
-      setTags(response.data.tags);
-      console.log(response.data.tags);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  
+  const { metrics, fetchTypes, token } = store((state) => ({
+    metrics: state.metrics,
+    fetchTypes: state.fetchTypes,
+    token: state.token,
+  }));
 
   useEffect(() => {
-    getTags();
-  }, []);
+    // Fetch types if they are not already in the state
+    if (!metrics.types.data.length) {
+      fetchTypes(token);
+    }
+  }, [metrics.types.data, fetchTypes, token]);
 
   const handleChange = (selected: string[]) => {
-    const data = {
+    value({
       name: "pageType",
       value: selected,
-    };
-    value(data);
+    });
   };
 
-  useEffect(() => {
-    const options = tagss.map(tag => ({
-      value: tag.name,
-      label: tag.name,
-    }));
-    setOptions(options);
-  }, [tags]);
-
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
-    }
-  }, [initialValue]);
+  // Generate options based on types data
+  const options = metrics.types.data.map((tag: Tag) => ({
+    value: tag.name,
+    label: tag.title,
+  }));
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
-      placeholder="Pitch Deck Category"
+      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      placeholder="Select Page Type"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );

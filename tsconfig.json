@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "sections/Pitches.tsx", "data/dummyDatas.jsx", "components/selections/SelectModetsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "sections/Pitches.tsx", "data/dummyDatas.jsx", "components/selections/SelectModetsx", "app/categories/[id]/page.tsx", "app/categories/add/page.tsx", "app/pages/add/page.tsx"],
   "exclude": ["node_modules"]
 }

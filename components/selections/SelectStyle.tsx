@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "@/lib/axios";
 import { Select } from "antd";
 import { store } from "@/stores/store";
 
@@ -14,52 +13,60 @@ interface Tag {
 
 interface SelectCategoryTypeProps {
   value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  initialValue: string[] | string;
 }
 
 export function SelectStyle({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
-  const { metrics } = store();
+  const { metrics, fetchStyles, token } = store((state) => ({
+    metrics: state.metrics,
+    fetchStyles: state.fetchStyles,
+    token: state.token,
+  }));
+
+  const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
+
 
   useEffect(() => {
-    setTags(metrics.styles.data);
-    console.log(metrics.styles.data);
-  }, []);
-
+    // Fetch styles if they are not already in the state
+    if (!metrics.styles.data.length) {
+      fetchStyles(token);
+    }
+  }, [metrics.styles.data, fetchStyles, token]);
 
   const handleChange = (selected: string[]) => {
-    const data = {
+    setSelectedValue(selected); // Update local state
+    value({
       name: "style",
       value: selected,
-    };
-    value(data);
+    });
   };
 
-  useEffect(() => {
-    const options = tags.map(tag => ({
-      value: tag.name,
-      label: tag.name,
-    }));
-    setOptions(options);
-  }, [tags]);
+  // Generate options based on styles data
+  const options = metrics.styles.data.map((tag: Tag) => ({
+    value: tag.name,
+    label: tag.title,
+  }));
 
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
-    }
-  }, [initialValue]);
+    // Update selected value when initialValue prop changes
+    useEffect(() => {
+      if (initialValue) {
+        // If initialValue is a string, convert it into an array to match the expected format
+        setSelectedValue(Array.isArray(initialValue) ? initialValue : [initialValue]);
+      }
+    }, [initialValue]); // Runs when the initialValue changes
+  
 
+    
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
-      placeholder="Pitch Deck Category"
+      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      // defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      placeholder="Select Style"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );

@@ -2,7 +2,6 @@ import axios from "@/lib/axios";
 import create, { StateCreator } from "zustand";
 import { persist, PersistOptions } from "zustand/middleware";
 
-// Define data types for templates, statistics, pages, and the store state
 
 type Page = {
   _id: string;
@@ -52,14 +51,19 @@ const initialPageData: Page = {
   id: "",
 };
 
-type Metrics = {
-  users: any[];
-  components: any[];
-  industries: any[];
-  stacks: any[];
-  styles: any[];
-  types: any[];
-};
+// type Metrics = {
+//   users: any[];
+//   components: any[];
+//   industries: any[];
+//   stacks: any[];
+//   styles: any[];
+//   types: any[];
+// };
+interface Metrics {
+  [key: string]: {
+      data: any[];  // Specify the type of data if known, for example, `data: MetricData[]`
+  };
+}
 
 type StoreState = {
   loading: boolean;
@@ -68,6 +72,12 @@ type StoreState = {
   token: string;
   link: string;
   metrics: Metrics;
+  users: any[];
+  components: any[];
+  industries: any[];
+  stacks: any[];
+  styles: any[];
+  types: any[];
   user: Record<string, any>;
   SingleData: Record<string, any>;
   isLogged: boolean;
@@ -93,12 +103,12 @@ const initialState: StoreState = {
   token: "",
   link: "/pitch-decks",
   metrics: {
-    users: [],
-    components: [],
-    industries: [],
-    stacks: [],
-    styles: [],
-    types: [],
+    users: {data: []},
+    components: {data: []},
+    industries:  {data: [ ]},
+    stacks: {data: []},
+    styles: {data: []},
+    types: {data: []},
   },
   user: {},
   SingleData: {},
@@ -120,7 +130,13 @@ const initialState: StoreState = {
     message: "",
     errors: null,
   },
-  error: null,  // Initialize error state
+  error: null,
+  users: [],
+  components: [],
+  industries: [],
+  stacks: [],
+  styles: [],
+  types: []
 };
 
 // Store interface defining state and actions

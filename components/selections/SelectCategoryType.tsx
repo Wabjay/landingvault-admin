@@ -57,7 +57,7 @@ export function SelectCategoryType({ value, initialValue }: SelectCategoryTypePr
     if (initialValue && initialValue.length > 0) {
       handleChange(initialValue);
     }
-  }, [initialValue]);
+  }, [handleChange, initialValue]);
 
   return (
     <Select

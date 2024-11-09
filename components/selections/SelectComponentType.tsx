@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "@/lib/axios";
 import { Select } from "antd";
-import { tagss } from "@/data/dummyDatas";
 import { store } from "@/stores/store";
 
 interface Tag {
@@ -15,54 +13,61 @@ interface Tag {
 
 interface SelectCategoryTypeProps {
   value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  initialValue: string[] | string;
 }
 
 export function SelectComponentType({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { metrics, fetchComponents, token } = store((state) => ({
+    metrics: state.metrics,
+    fetchComponents: state.fetchComponents,
+    token: state.token,
+  }));
+  const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
 
-
-  const { metrics } = store();
 
   useEffect(() => {
-    setTags(metrics.components.data);
-    console.log(metrics.components.data);
-  }, []);
-
+    // Fetch component tags if not already loaded
+    if (!metrics.components.data.length) {
+      fetchComponents(token);
+    }
+  }, [metrics.components.data, fetchComponents, token]);
 
   const handleChange = (selected: string[]) => {
-    const data = {
+    setSelectedValue(selected); // Update local state
+    value({
       name: "componentType",
       value: selected,
-    };
-    value(data);
+    });
   };
 
-  useEffect(() => {
-    const options = tags.map(tag => ({
-      value: tag.name,
-      label: tag.title,
-    }));
-    setOptions(options);
-  }, [tags]);
+  // Format options based on fetched components
+  const options = metrics.components.data.map((tag: Tag) => ({
+    value: tag.name,
+    label: tag.title,
+  }));
 
+   
   // Update selected value when initialValue prop changes
   useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
+    if (initialValue) {
+      // If initialValue is a string, convert it into an array to match the expected format
+      setSelectedValue(Array.isArray(initialValue) ? initialValue : [initialValue]);
     }
-  }, [initialValue]);
+  }, [initialValue]); // Runs when the initialValue changes
+
+
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
+      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+
+      // defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
       placeholder="Pitch Deck Category"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );
