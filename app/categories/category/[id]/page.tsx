@@ -11,6 +11,8 @@ import Loading from "@/components/blocks/LoadingComponent";
 import { Notification } from "@/components/blocks/Notification";
 import TextArea from "antd/es/input/TextArea";
 import { useRouter } from "next/router";
+import { useNavigation } from "@/components/utils/navigations";
+import { handleDeleteCategory } from "@/lib/deleteData";
 
 interface FormData {
   name: string;
@@ -22,6 +24,7 @@ const SinglePitch = () => {
   const pathname = usePathname();
   const { fetchSingle, SingleData, token, setIsComponentLoading, componentLoading, fetchComponents,fetchIndustries, fetchStacks,fetchTypes, fetchStyles, fetchUsers } = store();
   const isBigScreen = useMediaQuery({ query: "(min-width: 1024px)" });
+  const { navigateTo } = useNavigation(); 
 
   // Local state for form data
   const [formData, setFormData] = useState<FormData>({
@@ -105,6 +108,9 @@ setEdit(edit)
     }
   };
 
+  const onDeleteCat = () => {
+    handleDeleteCategory(type, slug, token, navigateTo(`/categories/${type}`));
+  };
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
@@ -147,6 +153,12 @@ setEdit(edit)
               onChange={handleChange}
             />
           </div>
+          {/* <button
+            onClick={onDeleteCat}
+            className="bg-[#FF6464] border-[#FF6464] shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"
+          >
+            Delete
+          </button> */}
         </div>
       </div>
     </div>

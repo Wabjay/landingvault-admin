@@ -52,7 +52,7 @@ const PageCard = ({ page }) => {
         <div className='flex flex-col gap-2 justify-between mb-1'>
           <Skeleton>
           <h5 className='text-16 font-medium text-grey-900'>{page?.brandName}</h5>
-          <p className='text-14 text-grey-700'>{page?.brandDescription}</p>
+          <p className='text-14 text-grey-700'>{page?.brandDescription?.substring(0, 80)}...</p>
            
           </Skeleton>
         </div>
