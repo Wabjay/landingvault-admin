@@ -25,6 +25,7 @@ const Categories = () => {
 
   useEffect(() => {
     const currentPage = pathname.split("/")[2]; // Extract page name dynamically
+    // const currentPage = currentPageReal === "stack" ? "stacks" : currentPageReal
     if (currentPage) {
       setPageName(currentPage);
 

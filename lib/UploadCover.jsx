@@ -7,6 +7,7 @@ import { store } from "@/stores/store";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 import Image from "next/image";
 import Icon from "@/assets/Upload icons.svg";
+import LoadImage from "@/components/blocks/LoadImage";
 
 const ImageCover = ({ coverImage, coverPath, uploaded }) => {
   const [imageUrl, setImageUrl] = useState(uploaded);
@@ -49,10 +50,11 @@ const ImageCover = ({ coverImage, coverPath, uploaded }) => {
       >
         {imageUrl ? (
           <div className="relative">
-            <Image src={imageUrl} alt="Cover Image" width={100} height={100} style={{ maxWidth: "100%", maxHeight: "100%" }} />
-            <Button className="absolute top-[50%] left-[20%] tablet:left-[32%] text-[#3E7B52] bg-[#A9EFCD] text-14 font-medium px-4 py-2 rounded-none">
+            {/* <Image src={imageUrl} alt="Cover Image" width={100} height={100} style={{ maxWidth: "100%", maxHeight: "100%" }} /> */}
+            <Button style={{position: 'absolute', zIndex:"30", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} className="!absolute top-[50%] z-30 left-[50%] transform-[translate(-50%, -50%)] tablet:left-[32%] text-[#3E7B52] bg-[#A9EFCD] text-14 font-medium px-4 py-2 rounded-none">
               Update Cover Image
             </Button>
+            <LoadImage src={imageUrl} alt="Cover Image" />
           </div>
         ) : (
           <div className="text-center">

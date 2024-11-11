@@ -30,7 +30,7 @@ console.log(getMetrics)
     <div className="tablet:grid tablet:justify-between gap-8 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
 
 {cardItems.map((item, index) => (
-        <Card key={index} name={item.name} value={item.value} link={`/${createSlug(item.link)}`} />
+        <Card key={index} name={item.name} value={item.value} link={`/categories/${createSlug(item.link)}`} />
       ))}
      
     </div>

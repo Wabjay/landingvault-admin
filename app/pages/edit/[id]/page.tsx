@@ -130,6 +130,7 @@ export default function UpdatePage() {
         __v: 0,
         id: "",
       });
+      fetchSinglePage(createSlug(formData.brandName))
       router.push(`/pages/${createSlug(formData.brandName)}`);
       Notification("Page Updated Successfully");
     } catch (error) {
@@ -147,14 +148,14 @@ export default function UpdatePage() {
           <div className="w-full flex justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 py-[40px] tablet:pt-[80px]">
             <BackButton color="white" />
             <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
-              <span>Save and upload</span> <Loading width={20} height={20} color="#FFFFFF" />
+              <span>Update Page</span> <Loading width={20} height={20} color="#FFFFFF" />
             </Button>
           </div>
 
           <p className="text-[64px] font-bold leading-[72px] tracking-[-2px] text-[#2E2E27] mx-auto w-full">Edit Page</p>
 
           <div className="w-full px-4 tablet:px-6 laptop:px-0 flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
-            <div className="w-full flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
+            <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <ImageCover coverImage={getImage} coverPath="coverImages" uploaded={formData.pageCoverImage} />
             </div>
 
@@ -171,7 +172,7 @@ export default function UpdatePage() {
 
             <InputField name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
 
-            <div className="w-full flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
+            <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData.pageImage} />
             </div>
           </div>

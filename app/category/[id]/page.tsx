@@ -31,6 +31,7 @@ const SinglePitch = () => {
   });
     const [slug, setSlug] = useState<any>(null);
     const [type, setType] = useState<any>(null);
+    const [edit, setEdit] = useState<any>("true");
   
     useEffect(() => {
       const currentPage = pathname.split("/")[3];
@@ -39,6 +40,9 @@ const SinglePitch = () => {
   
       // Example of getting query params
       const type = params.get('ref');
+      const edit = params.get('edit');
+      console.log(edit)
+  setEdit(edit)
   setType(type)
   setSlug(currentPage)
     }, [pathname]);
@@ -47,6 +51,7 @@ const SinglePitch = () => {
     if (slug) {
       fetchSingle(slug, type);
     }
+    
   }, [slug, type, fetchSingle]);
 
   useEffect(() => {
@@ -99,9 +104,10 @@ const SinglePitch = () => {
               className="flex items-center text-white border border-green-600 bg-green-600 w-[175px] h-10 justify-center text-14 font-medium hover:bg-opacity-90 whitespace-nowrap cursor-pointer"
               disabled={componentLoading}
             >
-              <span>Save and upload</span>
+              <span>{edit === "true" ? 'Update' : 'Edit'}</span>
               {componentLoading && <Loading width={20} height={20} color="#FFFFFF" />}
             </Button>
+
           </div>
           <div className="w-[90%] max-w-[700px] flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
             <InputField
