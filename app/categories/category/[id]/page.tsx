@@ -108,9 +108,9 @@ setEdit(edit)
     }
   };
 
-  const onDeleteCat = () => {
-    handleDeleteCategory(type, slug, token, navigateTo(`/categories/${type}`));
-  };
+  // const onDeleteCat = () => {
+  //   handleDeleteCategory(type, slug, token, navigateTo(`/categories`));
+  // };
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
