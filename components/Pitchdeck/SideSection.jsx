@@ -33,23 +33,23 @@ const SideSection = ({ page }) => {
         <p className="w-full grid grid-cols-5 text-14 gap-y-4 leading-6 font-semibold">
           <Skeleton>
             <span className="col-span-2">Industry</span>
-            <span className="col-span-2">{page?.industry.map(item => item)}</span>
+            <span className="col-span-2">{page?.industry.map(item => item +  ', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Component Type</span>
-            <span className="col-span-3">{page?.componentType.map(item => item)}</span>
+            <span className="col-span-3">{page?.componentType.map(item => item +  ', ')}</span>
+          </Skeleton>
+          <Skeleton>
+            <span className="col-span-2">Stack</span>
+           <span className="col-span-2"> {page?.stacks.map(item =>item +  ', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Type</span>
-            <span className="col-span-2">{page?.stacks.map(item => item)}</span>
-          </Skeleton>
-          <Skeleton>
-            <span className="col-span-2">Type</span>
-            <span className="col-span-2">{page?.type.map(item => item)}</span>
+            <span className="col-span-2">{page?.type.map(item => item +  ', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Style</span>
-            <span className="col-span-2">{page?.style.map(item => item)}</span>
+            <span className="col-span-2">{page?.style.map(item => item +  ', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Mode</span>
