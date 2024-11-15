@@ -10,15 +10,15 @@ import { store } from '@/stores/store';
 import Image from "next/image";
 import Link from "next/link";
 import { useNavigation } from "@/components/utils/navigations";
-import { handleDeletePitch } from "@/lib/deleteData";
+import { handleDeletePage } from "@/lib/deleteData";
 const PageCard = ({ page }) => {
   const { token } = store();
   const { navigateTo } = useNavigation();
 
   console.log(page)
 
-  const onDeletePitch = (page) => {
-      handleDeletePitch(page.brandName, page._id, token, navigateTo('pages'));
+  const onDeletePage = (page) => {
+      handleDeletePage(page.brandName, page._id, token, navigateTo('pages'));
   };
 
   return (
@@ -44,7 +44,7 @@ const PageCard = ({ page }) => {
           <button className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-[#2E2E2F] font-bold hover:bg-slate-300">Edit</button>
         </Link>
 
-        <button onClick={()=>onDeletePitch(page)} className="border border-[#FF6464] bg-[#FF6464] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Delete</button>
+        <button onClick={()=>onDeletePage(page)} className="border border-[#FF6464] bg-[#FF6464] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Delete</button>
       </div>
       <Link href={`/pages/${createSlug(page?.brandName)}`} className="absolute top-2 right-2"> <Image src={Arrow} alt="Arrow Up" width="24px" height='24px' className='hover:border-[#F2F1E8] hover:border hover:bg-[#F2F1E8]' /></Link>
       </div>

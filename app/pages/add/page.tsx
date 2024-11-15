@@ -55,9 +55,12 @@ export default function AddPage() {
     colorPalette: [],
   });
 
+  const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
+
   // Handle change for input fields
   const handleChange = (e: ChangeEvent<HTMLInputElement| HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+
     setFormData(prevFormData => ({
       ...prevFormData,
       [name]: value,
@@ -81,6 +84,10 @@ export default function AddPage() {
 
   // Handle form submission (upload)
   const handlePublish = async () => {
+    if(!urlPattern.test(formData.websiteUrl)){
+      Notification("Please enter a valid website URL");
+    }
+    else {
     try {
       setIsComponentLoading(true);
       await axios.post("/page", formData, {
@@ -115,6 +122,7 @@ export default function AddPage() {
     } finally {
       setIsComponentLoading(false);
     }
+  }
   };
 
   return (
@@ -147,7 +155,7 @@ export default function AddPage() {
 
             {/* <InputField type="number" name="updatedAt" label="Date" placeholder="10" value={formData.updatedAt} onChange={handleChange} /> */}
             <InputField type="string" name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
-
+            {(!urlPattern.test(formData.websiteUrl))  && <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">Please enter a valid website URL</p>}
             <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData.pageImage} />
             </div>

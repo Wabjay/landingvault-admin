@@ -4,7 +4,7 @@ import { Modal } from "antd";
 import axios from "@/lib/axios";
 import { store } from "@/stores/store";
 
-export const handleDeletePitch = async (name: string, id: string, token: string, navigateTo: (path: string) => void) => {
+export const handleDeletePage = async (name: string, id: string, token: string, navigateTo: (path: string) => void) => {
   const { confirm } = Modal;
   // eslint-disable-next-line react-hooks/rules-of-hooks
 console.log(id)
