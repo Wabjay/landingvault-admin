@@ -36,7 +36,7 @@ const SinglePitch = () => {
     const [slug, setSlug] = useState<any>(null);
     const [type, setType] = useState<any>(null);
     const [id, setId] = useState<string>("");
-    const [edit, setEdit] = useState<any>("false");
+    const [edit, setEdit] = useState<any>("true");
 
     useEffect(() => {
       const currentPage = pathname.split("/")[3];
