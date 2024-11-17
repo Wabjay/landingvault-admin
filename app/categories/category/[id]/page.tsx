@@ -82,25 +82,26 @@ setEdit(edit)
   const handlePublish = async () => {
     try {
       setIsComponentLoading(true);
-      const response = await axios.patch(`${type}/${id}`, formData, {
+     await axios.patch(`${type}/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
           "Access-Control-Allow-Credentials": true,
         },
-      });
-      setFormData({
-        name: response.data.name,
-        title: response.data.title, 
-        description: response.data.description,
-      });
+      }).then(response => 
+        setFormData({
+          name: response.data.name,
+          title: response.data.title, 
+          description: response.data.description,
+        })
+      );
       fetchUsers(token)
-      fetchComponents(token)
-      fetchTypes(token)
-      fetchStacks(token)
-      fetchStyles(token)
-      fetchIndustries(token)
-      Notification(`${type} Updated Successfully`);
+        fetchComponents(token)
+        fetchTypes(token)
+        fetchStacks(token)
+        fetchStyles(token)
+        fetchIndustries(token)
+        Notification(`${type} Updated Successfully`);
     } catch (error) {
       Notification(`Error Uploading ${type}`);
       console.error(`Error Uploading ${type}: `, error);
