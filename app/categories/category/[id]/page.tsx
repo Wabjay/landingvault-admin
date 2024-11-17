@@ -133,7 +133,7 @@ setEdit(edit)
               className="flex items-center text-white border border-green-600 bg-green-600 w-[175px] h-10 justify-center text-14 font-medium hover:bg-opacity-90 whitespace-nowrap cursor-pointer"
               disabled={componentLoading}
             >
-              <span>{edit === "true" ? 'Update' : 'Edit'}</span>
+              <span>{edit === "false" ? 'Edit' : 'Update'}</span>
               {componentLoading && <Loading width={20} height={20} color="#FFFFFF" />}
             </Button>
             
