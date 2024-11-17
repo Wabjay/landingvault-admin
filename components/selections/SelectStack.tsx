@@ -45,7 +45,7 @@ export function SelectStack({ value, initialValue }: SelectCategoryTypeProps) {
   // Generate options based on stacks data
   const options = metrics.stacks.data.map((tag: Tag) => ({
     value: tag.name,
-    label: tag.title,
+    label: tag.name,
   }));
 
   

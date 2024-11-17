@@ -40,6 +40,8 @@ export default function AddPage() {
   const router = useRouter();
   const { navigateTo } = useNavigation();
 
+  const [color, setColor] = useState<string>("")
+
   const [formData, setFormData] = useState<FormData>({
     pageImage: "",
     pageCoverImage: "",
@@ -60,11 +62,20 @@ export default function AddPage() {
   // Handle change for input fields
   const handleChange = (e: ChangeEvent<HTMLInputElement| HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
-    setFormData(prevFormData => ({
+if(name === "colorPalette"){
+  const newValue = value.split(",")
+   setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: newValue.map(color => color.trim()),
+    }));
+    setColor(value)
+}else{
+setFormData(prevFormData => ({
       ...prevFormData,
       [name]: value,
     }));
+}
+    
   };
  
 
@@ -152,6 +163,7 @@ export default function AddPage() {
             <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
             <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
             <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
+            <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
 
             {/* <InputField type="number" name="updatedAt" label="Date" placeholder="10" value={formData.updatedAt} onChange={handleChange} /> */}
             <InputField type="string" name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />

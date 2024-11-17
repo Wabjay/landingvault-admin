@@ -1,20 +1,23 @@
-import React from "react";
+ import React from "react";
 import moment from "moment";
 import Skeleton from "../Skeleton";
 import { store } from "@/stores/store";
 import Link from "next/link";
-import { handleDeletePitch } from "@/lib/deleteData";
+import { handleDeletePage } from "@/lib/deleteData";
 import { useNavigation } from "@/components/utils/navigations";
 import { createSlug } from "../blocks/slug";
 
 const SideSection = ({ page }) => {
-  const { token } = store();
+  const { token, fetchAllPages } = store();
   const { navigateTo } = useNavigation(); 
 
-  console.log(page)
-  // Delete pitch handler
+  let navigate =()=>{
+    fetchAllPages()
+  navigateTo('/pages')
+}
+
   const onDeletePitch = () => {
-    handleDeletePitch(page.brandName, page._id, token, navigateTo('pages'));
+    handleDeletePage(page.brandName, page._id, token, navigate());
   };
 
   // Conditional rendering for page data
@@ -33,11 +36,11 @@ const SideSection = ({ page }) => {
         <p className="w-full grid grid-cols-5 text-14 gap-y-4 leading-6 font-semibold">
           <Skeleton>
             <span className="col-span-2">Industry</span>
-            <span className="col-span-2">{page?.industry.map(item => item +  ', ')}</span>
+            <span className="col-span-2">{page?.industry.join(', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Component Type</span>
-            <span className="col-span-3">{page?.componentType.map(item => item +  ', ')}</span>
+            <span className="col-span-3">{page?.componentType.join(', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Stack</span>
@@ -45,11 +48,11 @@ const SideSection = ({ page }) => {
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Type</span>
-            <span className="col-span-2">{page?.type.map(item => item +  ', ')}</span>
+            <span className="col-span-2">{page?.type.join(', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Style</span>
-            <span className="col-span-2">{page?.style.map(item => item +  ', ')}</span>
+            <span className="col-span-2">{page?.style.join(', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Mode</span>
@@ -60,8 +63,9 @@ const SideSection = ({ page }) => {
             <span className="col-span-2">{moment(page?.date).format("LL")}</span>
           </Skeleton>
           <Skeleton>
-            <span className="col-span-2">Colour Palette</span>
-            <span className="col-span-2">{page?.colorPalette.map(item => <p key={item} className={`w-6 h-6 rounded-full bg-${item} ml-[-12px]`}>{item}</p>)}</span>
+            <span className="col-span-2">Color Palette</span>
+            <span className="col-span-2">{page?.colorPalette.join(', ')}</span>
+            {/* <span className="col-span-2">{page?.colorPalette.map(item => <p key={item} className={`w-6 h-6 rounded-full bg-${item} ml-[-12px]`}>{item}</p>)}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Website Link</span>

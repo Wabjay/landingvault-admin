@@ -40,7 +40,7 @@ export function SelectPageType({ value, initialValue }: SelectCategoryTypeProps)
   // Generate options based on types data
   const options = metrics.types.data.map((tag: Tag) => ({
     value: tag.name,
-    label: tag.title,
+    label: tag.name,
   }));
 
   return (

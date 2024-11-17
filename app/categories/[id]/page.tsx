@@ -6,6 +6,7 @@ import { store } from "@/stores/store";
 import BackButton from "@/components/blocks/BackButton";
 import InfoCard from "@/components/Category/InfoCard";
 import Link from "next/link";
+import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 
 // Define types for metrics and page data (assuming a generic structure)
 interface MetricData {
@@ -38,6 +39,7 @@ const Categories = () => {
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
+        <LoadingOverlay />
         <div className="w-full laptop:max-w-[1152px] desktop:max-w-full mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-7 tablet:gap-10 laptop:gap-14 desktop:gap-24">
           <div>
             <div className="flex justify-between">

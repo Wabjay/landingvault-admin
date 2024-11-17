@@ -171,18 +171,19 @@ const fetchData = async (
   stateKey: string
 ) => {
   try {
+    setState({ overlayLoading: true });
     const response = await axios.get(url, {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     });
     setState((state: any) => ({
       ...state,
       metrics: { ...state.metrics, [stateKey]: response.data },
-      loading: false,
+      overlayLoading: false,
     }));
     console.log(stateKey, response.data)
   } catch (error) {
     console.error(`Error fetching ${stateKey}:`, error);
-    setState({ loading: false });
+    setState({ overlayLoading: false });
     setState({ error: `Error fetching ${stateKey}` });  // Set error state
   }
 };
@@ -220,23 +221,23 @@ export const store = create<Store>(
 
       fetchAllPages: async () => {
         // const token = () => get().token
-        set({ componentLoading: true });
+        set({ overlayLoading: true });
         try {
           await axios
             .get(`/page`)
             .then(function (response) {
-              set({ pages: response.data , componentLoading: false });
+              set({ pages: response.data , overlayLoading: false });
               console.log(response.data)
             });
         } catch (error) {
           console.error("Error fetching Data:", error);
-          set({ componentLoading: false }); // Corrected from `loading: false`
+          set({ overlayLoading: false }); // Corrected from `loading: false`
       }
       },
 
       fetchSinglePage: async (title: string) => {
         console.log(title)
-        set({ componentLoading: true });
+        set({ overlayLoading: true });
         try {
           await axios
             .get(`/page/name/${title}`, {
@@ -246,18 +247,18 @@ export const store = create<Store>(
               },
             })
             .then(function (response) {
-              set({ page: response.data , componentLoading: false });
+              set({ page: response.data , overlayLoading: false });
               console.log(response.data)
             });
         } catch (error) {
           console.error("Error fetching Data:", error);
-          set({ componentLoading: false }); // Corrected from `loading: false`
+          set({ overlayLoading: false }); // Corrected from `loading: false`
       }
           },
 
       fetchSingle: async (id: string, type: string) => {
         // const token = () => get().token
-        set({ componentLoading: true });
+        set({ overlayLoading: true });
         try {
           await axios
             .get(`/${type}/${id}`, {
@@ -267,12 +268,12 @@ export const store = create<Store>(
               },
             })
             .then(function (response) {
-              set({ SingleData: response.data , componentLoading: false });
+              set({ SingleData: response.data , overlayLoading: false });
               console.log(response.data)
             });
         } catch (error) {
           console.error("Error fetching Data:", error);
-          set({ componentLoading: false }); // Corrected from `loading: false`
+          set({ overlayLoading: false }); // Corrected from `loading: false`
       }
       },
     }),

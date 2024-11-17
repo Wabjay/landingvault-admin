@@ -6,6 +6,7 @@ import SideSection from "@/components/Pitchdeck/SideSection";
 import LoadImage from "@/components/blocks/LoadImage";
 import { store } from "@/stores/store";
 import BackButton from "@/components/blocks/BackButton";
+import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 
 const SinglePitch = () => {
   const pathname = usePathname();
@@ -23,6 +24,7 @@ const SinglePitch = () => {
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
+      <LoadingOverlay />
         <div className="w-full laptop:max-w-[1152px] desktop:max-w-full mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14 desktop:gap-24">
           <div className="bg-[#F2F1E8]">
             <div className="w-full laptop:max-w-[1440px] mx-auto px-4 tablet:px-6 laptop:px-0 desktop:px-0 bg-white">

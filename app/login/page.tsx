@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="container flex items-center justify-center w-full h-screen bg-overlay fixed top-0 left-0 z-20">
+    <div className="flex items-center justify-center w-full h-screen bg-white fixed top-0 left-0 z-20">
       <form onSubmit={handleSubmit} className="w-11/12 max-w-md flex flex-col gap-6 p-6 rounded-lg bg-white border border-gray-300">
         <p className="text-center text-lg font-bold tablet:text-xl">
           Login to Landingvault Admin Dashboard

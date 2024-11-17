@@ -13,6 +13,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useRouter } from "next/router";
 import { useNavigation } from "@/components/utils/navigations";
 import { handleDeleteCategory } from "@/lib/deleteData";
+import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 
 interface FormData {
   name: string;
@@ -81,7 +82,7 @@ setEdit(edit)
   const handlePublish = async () => {
     try {
       setIsComponentLoading(true);
-      await axios.patch(`${type}/${id}`, formData, {
+      const response = await axios.patch(`${type}/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -89,9 +90,9 @@ setEdit(edit)
         },
       });
       setFormData({
-        name: "",
-        title: "",
-        description: "",
+        name: response.data.name,
+        title: response.data.title, 
+        description: response.data.description,
       });
       fetchUsers(token)
       fetchComponents(token)
@@ -107,13 +108,22 @@ setEdit(edit)
       setIsComponentLoading(false);
     }
   };
-
-  // const onDeleteCat = () => {
-  //   handleDeleteCategory(type, slug, token, navigateTo(`/categories`));
-  // };
+  let navigate =(value: string)=>{
+    fetchUsers(token)
+    fetchComponents(token)
+    fetchTypes(token)
+    fetchStacks(token)
+    fetchStyles(token)
+    fetchIndustries(token)
+  navigateTo('/categories')
+}
+  const onDeleteCat = () => {
+    handleDeleteCategory(type, slug, token, navigate);
+  };
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
+      <LoadingOverlay />
         <div className="w-full laptop:max-w-[700px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
           <div className="w-full flex justify-between items-start laptop:max-w-[1152px] mx-auto px-4 tablet:px-6 laptop:px-8 xl:px-0 py-[40px] tablet:pt-[80px] laptop:pt-[100px]">
             <BackButton color="white" />
@@ -153,12 +163,12 @@ setEdit(edit)
               onChange={handleChange}
             />
           </div>
-          {/* <button
+          <button
             onClick={onDeleteCat}
-            className="bg-[#FF6464] border-[#FF6464] shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"
+            className="bg-[#FF6464] border-[#FF6464] w-[80%] max-w-[360px] mx-auto shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"
           >
             Delete
-          </button> */}
+          </button>
         </div>
       </div>
     </div>

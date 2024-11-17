@@ -18,6 +18,7 @@ import { SelectMode } from "@/components/selections/SelectMode";
 import { SelectStyle } from "@/components/selections/SelectStyle";
 import { SelectType } from "@/components/selections/SelectType";
 import { createSlug } from "@/components/blocks/slug";
+import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 
 // Define types
 interface Page {
@@ -53,7 +54,8 @@ export default function UpdatePage() {
   }, [fetchSinglePage, pathname]);
 
   const [error, setError] = useState<String>("")
-  
+  const [color, setColor] = useState<string>("")
+
     const [formData, setFormData] = useState<Page>({
     _id: "",
     pageImage: "",
@@ -81,6 +83,8 @@ export default function UpdatePage() {
         ...formData,
         ...page,
       });
+      const colors = page.colorPalette.join(", ")
+      setColor(colors)
     }
   }, []);
 
@@ -91,9 +95,16 @@ export default function UpdatePage() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
+    if(name === "colorPalette"){
+      const newValue = value.split(",")
+       setFormData({
+        ...formData, [name]: newValue.map(color => color.trim()),
+        });
+        setColor(value)
+    }else{
     setFormData({ ...formData, [name]: value });
-  };
+  }
+};
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -159,6 +170,7 @@ export default function UpdatePage() {
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
+      <LoadingOverlay />
         <div className="w-full laptop:max-w-[700px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
           <div className="w-full flex justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 py-[40px] tablet:pt-[80px]">
             <BackButton color="white" />
@@ -184,6 +196,7 @@ export default function UpdatePage() {
             <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
             <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
             <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
+            <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
 
             <InputField name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
               {(!urlPattern.test(formData.websiteUrl))  && <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">Please enter a valid website URL</p>}

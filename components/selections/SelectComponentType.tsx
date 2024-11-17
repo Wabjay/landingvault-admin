@@ -43,7 +43,7 @@ export function SelectComponentType({ value, initialValue }: SelectCategoryTypeP
   // Format options based on fetched components
   const options = metrics.components.data.map((tag: Tag) => ({
     value: tag.name,
-    label: tag.title,
+    label: tag.name,
   }));
 
    

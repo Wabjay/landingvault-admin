@@ -44,7 +44,7 @@ export function SelectIndustry({ value, initialValue }: SelectCategoryTypeProps)
   // Generate options based on industries data
   const options = metrics.industries.data.map((tag: Tag) => ({
     value: tag.name,
-    label: tag.title,
+    label: tag.name,
   }));
 
     // Update selected value when initialValue prop changes

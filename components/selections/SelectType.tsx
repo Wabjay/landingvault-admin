@@ -44,7 +44,7 @@ export function SelectType({ value, initialValue }: SelectCategoryTypeProps) {
   // Generate options based on types data
   const options = metrics.types.data.map((tag: Tag) => ({
     value: tag.name,
-    label: tag.title,
+    label: tag.name,
   }));
 
     // Update selected value when initialValue prop changes

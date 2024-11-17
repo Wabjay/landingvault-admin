@@ -18,7 +18,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [pathname]);
 
   return (
-    <div className="bg-[#F0F2FA]">
+    <div className="bg-white">
       {isUnprotectedRoute ? (
         children
       ) : (
