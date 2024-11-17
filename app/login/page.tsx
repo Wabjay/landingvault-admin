@@ -5,6 +5,8 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from '@/lib/axios';
 import { store } from '@/stores/store';
+import { autoLogout } from '@/lib/logout';
+import { useNavigation } from '@/components/utils/navigations';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -13,6 +15,8 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { setToken } = store();
+  const { logOut } = autoLogout();
+  const { navigateTo } = useNavigation();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -30,6 +34,8 @@ const LoginPage: React.FC = () => {
       setToken(token);
       console.log('Login successful', token);
 
+      // auto logout
+      logOut(navigateTo);
       router.push('/');
     } catch (error) {
       console.error('Error logging in:', error);
