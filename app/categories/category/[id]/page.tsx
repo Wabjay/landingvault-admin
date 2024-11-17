@@ -88,13 +88,17 @@ setEdit(edit)
           Authorization: `Bearer ${token}`,
           "Access-Control-Allow-Credentials": true,
         },
-      }).then(response => 
+      })
+        // setFormData({
+        //   name: response.data.name,
+        //   title: response.data.title, 
+        //   description: response.data.description,
+        // })
         setFormData({
-          name: response.data.name,
-          title: response.data.title, 
-          description: response.data.description,
+          name: "",
+          title: "", 
+          description: "",
         })
-      );
       fetchUsers(token)
         fetchComponents(token)
         fetchTypes(token)
@@ -102,6 +106,7 @@ setEdit(edit)
         fetchStyles(token)
         fetchIndustries(token)
         Notification(`${type} Updated Successfully`);
+        navigateTo('/categories')
     } catch (error) {
       Notification(`Error Uploading ${type}`);
       console.error(`Error Uploading ${type}: `, error);
