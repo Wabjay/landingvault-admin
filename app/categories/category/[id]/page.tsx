@@ -134,12 +134,12 @@ setEdit(edit)
           <div className="w-full flex justify-between items-start laptop:max-w-[1152px] mx-auto px-4 tablet:px-6 laptop:px-8 xl:px-0 py-[40px] tablet:pt-[80px] laptop:pt-[100px]">
             <BackButton color="white" />
            <Button
-              onClick={edit === "true" ? handlePublish : handleEdit}
+              onClick={edit === "false" ? handleEdit : handlePublish}
               className="flex items-center text-white border border-green-600 bg-green-600 w-[175px] h-10 justify-center text-14 font-medium hover:bg-opacity-90 whitespace-nowrap cursor-pointer"
               disabled={componentLoading}
             >
               <span>{edit === "false" ? 'Edit' : 'Update'}</span>
-              {componentLoading && <Loading width={20} height={20} color="#FFFFFF" />}
+              <Loading width={20} height={20} color="#FFFFFF" />
             </Button>
             
           </div>
