@@ -147,7 +147,7 @@ setEdit(edit)
             <InputField
               name="name"
               label="Tagname"
-              edit={edit === "true" ? false : true}
+              edit={edit === "false" ? true : false}
               placeholder="Olivia Rhye"
               value={formData.name}
               onChange={handleChange}
@@ -155,7 +155,7 @@ setEdit(edit)
             <InputField
               name="title"
               label="Enter Title"
-              edit={edit === "true" ? false : true}
+              edit={edit === "false" ? true : false}
               placeholder="Title ..."
               value={formData.title}
               onChange={handleChange}
@@ -163,7 +163,7 @@ setEdit(edit)
             <TextAreaField
               name="description"
               label="Description..."
-              edit={edit === "true" ? false : true}
+              edit={edit === "false" ? true : false}
               placeholder="Describe Pitch deck"
               value={formData.description}
               onChange={handleChange}
