@@ -39,7 +39,7 @@ const SideSection = ({ page }) => {
             <span className="col-span-2">{page?.industry.join(', ')}</span>
           </Skeleton>
           <Skeleton>
-            <span className="col-span-2">Component Type</span>
+            <span className="col-span-2">Component</span>
             <span className="col-span-3">{page?.componentType.join(', ')}</span>
           </Skeleton>
           <Skeleton>
