@@ -44,7 +44,7 @@ const SideSection = ({ page }) => {
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Stack</span>
-           <span className="col-span-2"> {page?.stacks.map(item =>item +  ', ')}</span>
+           <span className="col-span-2"> {page?.stacks.join(', ')}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Type</span>

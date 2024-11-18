@@ -17,7 +17,7 @@ console.log(getMetrics)
 
 
   const cardItems = [
-    { name: "No of Users", value: metrics?.users.length, link: "users" },
+    { name: "No of Users", value: metrics?.users?.length, link: "users" },
     { name: "Total Components Tag", value: metrics?.components.data.length, link: "components" },
     { name: "Total Type Tag", value: metrics?.types.data.length, link: "types" },
     { name: "Total Industry Tag", value: metrics?.industries.data.length, link: "industries" },

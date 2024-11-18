@@ -142,9 +142,7 @@ setFormData(prevFormData => ({
         <div className="w-full laptop:max-w-[900px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
           <div className="w-full flex justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pt-[40px] tablet:pt-[80px]">
             <BackButton color="white"/>
-            <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
-              <span>Save and upload</span> <Loading width={20} height={20} color="#FFFFFF"/>
-            </Button>
+           
           </div>
           <p className="text-[64px] font-bold leading-[72px] tracking-[-2px] text-[#2E2E27] mx-auto w-full">Create page</p>
 
@@ -171,6 +169,9 @@ setFormData(prevFormData => ({
             <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData.pageImage} />
             </div>
+            <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
+              <span>Save and upload</span> <Loading width={20} height={20} color="#FFFFFF"/>
+            </Button>
           </div>
         </div>
       </div>

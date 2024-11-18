@@ -37,7 +37,7 @@ export function SelectStack({ value, initialValue }: SelectCategoryTypeProps) {
   const handleChange = (selected: string[]) => {
     setSelectedValue(selected); // Update local state
     value({
-      name: "stack",
+      name: "stacks",
       value: selected,
     });
   };
