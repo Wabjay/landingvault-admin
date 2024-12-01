@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ControlIcon from "@/assets/control.png";
 import ChartIcon from "@/assets/Chart.png";
 import SettingIcon from "@/assets/Setting.png";
-import LogoIcon from "@/assets/logo.png"; // Uncomment if you plan to use logo
 import { handleLogout } from "@/lib/logout";
 import { useNavigation } from "./utils/navigations";
 import { usePathname } from "next/navigation";
@@ -32,8 +31,11 @@ const SideBar = () => {
     logOut(navigateTo);
   };
 
-  // Check if the current pathname matches the item's href
-  const isActive = (href) => pathname.startsWith(href);
+  // Check if the current pathname matches the item's href (exact or partial match)
+  const isActive = (href) => {
+    // Exact match or startsWith for more flexible matching
+    return pathname === href || pathname.startsWith(href);
+  };
 
   return (
     <div className="flex">
@@ -46,21 +48,12 @@ const SideBar = () => {
         <Image
           src={ControlIcon}
           alt="Toggle Sidebar"
-          className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple border-2 rounded-full ${
-            !isOpen && "rotate-180"
-          }`}
+          className={`absolute cursor-pointer -right-3 top-9 w-7 border-dark-purple border-2 rounded-full ${!isOpen && "rotate-180"}`}
           onClick={toggleSidebar}
         />
 
         {/* Logo and brand name */}
         <div className="flex gap-x-2 items-center">
-          {/* <Image
-            src={LogoIcon}
-            alt="Logo"
-            className={`cursor-pointer duration-500 w-10 h-10 ${
-              isOpen && "rotate-[360deg]"
-            }`}
-          /> */}
           {isOpen && (
             <h1 className="text-green-600 p-5 font-semibold text-16 whitespace-nowrap">
               LANDINGVAULT
@@ -75,11 +68,10 @@ const SideBar = () => {
               <li
                 className={`${
                   isActive(item.href)
-                    ? "bg-[#000] text-white"
-                    : "bg-white text-green-600"
+                    ? "bg-[#000] text-white" // Active item style
+                    : "bg-white text-green-600" // Default item style
                 } border border-black flex p-2 cursor-pointer hover:bg-[#000] hover:text-white text-xl font-semibold items-center gap-x-4`}
               >
-                {/* <Image src={item.icon} alt={`${item.label} Icon`} /> */}
                 {isOpen && (
                   <span className="origin-left duration-200">{item.label}</span>
                 )}

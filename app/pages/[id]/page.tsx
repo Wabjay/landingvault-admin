@@ -29,7 +29,7 @@ const SinglePitch = () => {
             <div className="w-full laptop:max-w-[1440px] mx-auto px-4 tablet:px-6 laptop:px-0 desktop:px-0 bg-white">
               <BackButton color={""} />
               <div className="laptop:grid laptop:grid-cols-auto laptop:gap-6 desktop:gap-8 laptop:justify-end">
-                <SideSection page={pageData} />
+                {/* <SideSection page={pageData} /> */}
                 <div className="bg-[#F2F1E8] order-first w-full">
                   <div className="mx-auto px-4 tablet:px-6 laptop:px-8 desktop:px-0">
                     <div className="flex flex-col gap-8 laptop:w-fit">
