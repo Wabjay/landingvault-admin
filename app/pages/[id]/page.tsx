@@ -7,6 +7,7 @@ import LoadImage from "@/components/blocks/LoadImage";
 import { store } from "@/stores/store";
 import BackButton from "@/components/blocks/BackButton";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
+import Skeleton from "@/components/Skeleton";
 
 const SinglePitch = () => {
   const pathname = usePathname();
@@ -14,11 +15,11 @@ const SinglePitch = () => {
   const isBigScreen = useMediaQuery({ query: "(min-width: 1024px)" });
 
   useEffect(() => {
-    const pageName = pathname.split("/")[2]?.toLowerCase(); 
+    const pageName = pathname.split("/")[2]?.toLowerCase();
     if (pageName) {
-      fetchSinglePage(pageName);  // Fetch the page data based on the page name
+      fetchSinglePage(pageName);
     }
-  }, [fetchSinglePage, pathname]);
+  }, [pathname]); // Removed fetchSinglePage from dependency
 
   return (
     <div className="w-full">
@@ -29,7 +30,11 @@ const SinglePitch = () => {
             <div className="w-full laptop:max-w-[1440px] mx-auto px-4 tablet:px-6 laptop:px-0 desktop:px-0 bg-white">
               <BackButton color={""} />
               <div className="laptop:grid laptop:grid-cols-auto laptop:gap-6 desktop:gap-8 laptop:justify-end">
-                {/* <SideSection page={pageData} /> */}
+              {pageData ? (
+  <SideSection page={pageData} />
+) : (
+  <Skeleton width={undefined} height={undefined}>Loading...</Skeleton>
+)}
                 <div className="bg-[#F2F1E8] order-first w-full">
                   <div className="mx-auto px-4 tablet:px-6 laptop:px-8 desktop:px-0">
                     <div className="flex flex-col gap-8 laptop:w-fit">

@@ -236,25 +236,19 @@ export const store = create<Store>(
       },
 
       fetchSinglePage: async (title: string) => {
-        console.log(title)
-        set({ overlayLoading: true });
+        set({ overlayLoading: true, error: null });
         try {
-          await axios
-            .get(`/page/name/${title}`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${get().token}`,
-              },
-            })
-            .then(function (response) {
-              set({ page: response.data.data[0] , overlayLoading: false });
-              console.log(response.data)
-            });
+          const response = await axios.get(`/page/name/${title}`, {
+            headers: { Authorization: `Bearer ${get().token}` },
+          });
+          const pageData = response.data?.data[0];
+          set({ page: pageData }); // Add a specific `page` key
         } catch (error) {
-          console.error("Error fetching Data:", error);
-          set({ overlayLoading: false }); // Corrected from `loading: false`
-      }
-          },
+          set({ error: handleError(error) });
+        } finally {
+          set({ overlayLoading: false });
+        }
+      },
 
       fetchSingle: async (id: string, type: string) => {
         // const token = () => get().token
@@ -280,3 +274,7 @@ export const store = create<Store>(
     { name: "app-storage", getStorage: () => localStorage }
   )
 );
+function handleError(error: unknown): string | null | undefined {
+  throw new Error("Function not implemented.");
+}
+

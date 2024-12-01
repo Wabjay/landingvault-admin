@@ -67,7 +67,7 @@ const SideSection = ({ page }) => {
   <span className="col-span-3 ml-6 text-grey-800">
   {page?.colorPalette.map((color, index) => (
     <span
-      key={index}
+      key={`${color}-${index}`}
       className="relative group ml-[-24px] w-6 h-6 rounded-full inline-block mr-2"
       style={{ backgroundColor: `#${color}` }}
     >
