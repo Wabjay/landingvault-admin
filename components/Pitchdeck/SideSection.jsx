@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import moment from "moment";
 import Skeleton from "../Skeleton";
 import { store } from "@/stores/store";
@@ -9,15 +9,13 @@ import { createSlug } from "../blocks/slug";
 
 const SideSection = ({ page }) => {
   const { token, fetchAllPages } = store();
-  const { navigateTo } = useNavigation(); 
-
-
+  const { navigateTo } = useNavigation();
 
   const onDeletePitch = () => {
     if (!page) return;
     handleDeletePage(page.brandName, page._id, token, () => {
       fetchAllPages();
-      navigateTo('/pages');
+      navigateTo("/pages");
     });
   };
 
@@ -37,61 +35,64 @@ const SideSection = ({ page }) => {
         <p className="w-full grid grid-cols-5 text-14 gap-y-4 leading-6 font-semibold">
           <Skeleton>
             <span className="col-span-2">Industry</span>
-            <span className="col-span-2">{page?.industry.join(', ')}</span>
+            <span className="col-span-2">{page?.industry?.join(", ") || "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Component</span>
-            <span className="col-span-3">{page?.componentType.join(', ')}</span>
+            <span className="col-span-3">{page?.componentType?.join(", ") || "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Stack</span>
-           <span className="col-span-2"> {page?.stacks.join(', ')}</span>
+            <span className="col-span-2">{page?.stacks?.join(", ") || "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Type</span>
-            <span className="col-span-2">{page?.type.join(', ')}</span>
+            <span className="col-span-2">{page?.type?.join(", ") || "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Style</span>
-            <span className="col-span-2">{page?.style.join(', ')}</span>
+            <span className="col-span-2">{page?.style?.join(", ") || "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Mode</span>
-            <span className="col-span-2">{page?.mode}</span>
+            <span className="col-span-2">{page?.mode || "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Date</span>
-            <span className="col-span-2">{moment(page?.date).format("LL")}</span>
+            <span className="col-span-2">
+              {page?.date ? moment(page.date).format("LL") : "N/A"}
+            </span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2 text-grey-600">Color Palette</span>
             <span className="col-span-3 ml-6 text-grey-800">
-
-  <span className="col-span-3 ml-6 text-grey-800">
-  {page?.colorPalette.map((color, index) => (
-    <span
-      key={`${color}-${index}`}
-      className="relative group ml-[-24px] w-6 h-6 rounded-full inline-block mr-2"
-      style={{ backgroundColor: `#${color}` }}
-    >
-      {/* Tooltip */}
-      <span
-      style={{ backgroundColor: `#${color}` }}
-        className="uppercase absolute left-1/2 transform -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-      >
-        #{color}
-      </span>
-    </span>
-  ))}
-</span>
-
-</span>          </Skeleton>
+              {page?.colorPalette?.map((color, index) => (
+                <span
+                  key={`${color}-${index}`}
+                  className="relative group ml-[-24px] w-6 h-6 rounded-full inline-block mr-2"
+                  style={{ backgroundColor: `#${color}` }}
+                >
+                  {/* Tooltip */}
+                  <span
+                    style={{ backgroundColor: `#${color}` }}
+                    className="uppercase absolute left-1/2 transform -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  >
+                    #{color}
+                  </span>
+                </span>
+              )) || "N/A"}
+            </span>
+          </Skeleton>
           <Skeleton>
             <span className="col-span-2">Website Link</span>
             <span className="col-span-2">
-              <a href={page?.websiteUrl} target="_blank" rel="noopener noreferrer">
-                {page?.websiteUrl}
-              </a>
+              {page?.websiteUrl ? (
+                <a href={page.websiteUrl} target="_blank" rel="noopener noreferrer">
+                  {page.websiteUrl}
+                </a>
+              ) : (
+                "N/A"
+              )}
             </span>
           </Skeleton>
         </p>
@@ -101,8 +102,7 @@ const SideSection = ({ page }) => {
         <Skeleton>
           <Link
             href={{
-              pathname: `/pages/edit/${createSlug(page?.brandName)}`
-              // query: { id: page?._id },
+              pathname: `/pages/edit/${createSlug(page?.brandName)}`,
             }}
             passHref
             className="bg-[#21AB68] border-[#21AB68] shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"

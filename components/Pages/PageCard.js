@@ -18,7 +18,10 @@ const PageCard = ({ page }) => {
   // console.log(page)
 
   const onDeletePage = (page) => {
-      handleDeletePage(page.brandName, page._id, token, navigateTo('pages'));
+    handleDeletePage(page.brandName, page._id, token, () => {
+        fetchAllPages();
+        navigateTo('/pages');
+      });;
   };
 
   return (

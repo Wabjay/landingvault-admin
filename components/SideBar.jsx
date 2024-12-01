@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ControlIcon from "@/assets/control.png";
@@ -33,11 +33,16 @@ const SideBar = () => {
 
   // Check if the current pathname matches the item's href (exact or partial match)
   const isActive = (href) => {
+    
     // Exact match or startsWith for more flexible matching
-
+const url = href.toLowerCase() === "dashboard" ? "/" : href.toLowerCase()
+console.log("pathname", pathname, url)
     return pathname === href || pathname.includes(href.toLowerCase());
-  };
+};
 
+useEffect(()=>{
+isActive("dashboard")
+},[])
   return (
     <div className="flex">
       <div
