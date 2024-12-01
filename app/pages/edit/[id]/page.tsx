@@ -78,7 +78,7 @@ export default function UpdatePage() {
 
   useEffect(() => {
     if (pageData) {
-      const page = pageData?.data[0];
+      const page = pageData;
       setFormData({
         ...formData,
         ...page,
@@ -130,7 +130,7 @@ export default function UpdatePage() {
     else {
     try {
       setIsComponentLoading(true);
-      await axios.patch(`/page/${pageData?.data[0]._id}`, formData, {
+      await axios.patch(`/page/${pageData._id}`, formData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

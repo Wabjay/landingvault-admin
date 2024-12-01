@@ -21,7 +21,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     if (authToken) {
       setIsAuthenticated(true);
-      console.log(authToken)
+      // console.log(authToken)
     } else {
       router.push('/login');
     }

@@ -85,7 +85,7 @@ type StoreState = {
   showData: boolean;
   tags: string[];
   images: string[];
-  page: PagesResponse;
+  page: Page;
   pages: {
     data: Page[];
     message: string;
@@ -123,13 +123,14 @@ const initialState: StoreState = {
     status: 0,
     pagination: { total: 0, page: 0, pages: 0 },
   },
-  page: {
-    data: [initialPageData], // Start with an array containing the initial page data
-    status: false,
-    statusCode: 0,
-    message: "",
-    errors: null,
-  },
+  page: initialPageData,
+  // {
+  //   data: [initialPageData], // Start with an array containing the initial page data
+  //   status: false,
+  //   statusCode: 0,
+  //   message: "",
+  //   errors: null,
+  // },
   error: null,
   users: [],
   components: [],
@@ -166,14 +167,14 @@ interface Store extends StoreState {
 // Helper function for API requests
 const fetchData = async (
   url: string,
-  token: string,
-  setState: any,
+  // token: string,
+  setState:  (fn: (state: StoreState) => Partial<StoreState>) => void,
   stateKey: string
 ) => {
   try {
-    setState({ overlayLoading: true });
+    setState(()=>({ overlayLoading: true }));
     const response = await axios.get(url, {
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      // headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
     });
     setState((state: any) => ({
       ...state,
@@ -183,8 +184,7 @@ const fetchData = async (
     console.log(stateKey, response.data)
   } catch (error) {
     console.error(`Error fetching ${stateKey}:`, error);
-    setState({ overlayLoading: false });
-    setState({ error: `Error fetching ${stateKey}` });  // Set error state
+    setState(()=> ({ overlayLoading: false, error: `Error fetching ${stateKey}` }));  // Set error state
   }
 };
 
@@ -212,12 +212,12 @@ export const store = create<Store>(
       setImages: (images) => set({ images }),
       setError: (message) => set({ error: message }),
 
-      fetchUsers: (token: string) => fetchData("/user", token, set, "users"),
-      fetchComponents: (token: string) => fetchData("/components", token, set, "components"),
-      fetchIndustries: (token: string) => fetchData("/industry", token, set, "industries"),
-      fetchStacks: (token: string) => fetchData("/stack", token, set, "stacks"),
-      fetchTypes: (token: string) => fetchData("/type", token, set, "types"),
-      fetchStyles: (token: string) => fetchData("/style", token, set, "styles"),
+      fetchUsers: () => fetchData("/user", set, "users"),
+      fetchComponents: () => fetchData("/components", set, "components"),
+      fetchIndustries: () => fetchData("/industry", set, "industries"),
+      fetchStacks: () => fetchData("/stack", set, "stacks"),
+      fetchTypes: () => fetchData("/type", set, "types"),
+      fetchStyles: () => fetchData("/style", set, "styles"),
 
       fetchAllPages: async () => {
         // const token = () => get().token
@@ -247,7 +247,7 @@ export const store = create<Store>(
               },
             })
             .then(function (response) {
-              set({ page: response.data , overlayLoading: false });
+              set({ page: response.data.data[0] , overlayLoading: false });
               console.log(response.data)
             });
         } catch (error) {
@@ -280,4 +280,3 @@ export const store = create<Store>(
     { name: "app-storage", getStorage: () => localStorage }
   )
 );
-

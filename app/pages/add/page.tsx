@@ -36,7 +36,7 @@ interface FormData {
 }
 
 export default function AddPage() {
-  const { token, setIsComponentLoading } = store();
+  const { token, setIsComponentLoading,  fetchAllPages } = store();
   const router = useRouter();
   const { navigateTo } = useNavigation();
 
@@ -126,6 +126,7 @@ setFormData(prevFormData => ({
       });
 
       Notification("Page Uploaded Successfully");
+      fetchAllPages()
       navigateTo(`/pages/${createSlug(formData.brandName)}`);
     } catch (error) {
       Notification("Error Uploading Pitch");

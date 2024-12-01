@@ -15,7 +15,7 @@ const PageCard = ({ page }) => {
   const { token } = store();
   const { navigateTo } = useNavigation();
 
-  console.log(page)
+  // console.log(page)
 
   const onDeletePage = (page) => {
       handleDeletePage(page.brandName, page._id, token, navigateTo('pages'));

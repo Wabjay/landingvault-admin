@@ -11,15 +11,13 @@ const SideSection = ({ page }) => {
   const { token, fetchAllPages } = store();
   const { navigateTo } = useNavigation(); 
 
-  let navigate =()=>{
-    fetchAllPages()
-  navigateTo('/pages')
-}
 
   const onDeletePitch = () => {
-    handleDeletePage(page.brandName, page._id, token, navigate());
+  handleDeletePage(page.brandName, page._id, token, () => {
+    fetchAllPages(); 
+    navigateTo('/pages');
+  })
   };
-
   // Conditional rendering for page data
   if (!page) return <Skeleton>Loading...</Skeleton>;
 
@@ -63,10 +61,28 @@ const SideSection = ({ page }) => {
             <span className="col-span-2">{moment(page?.date).format("LL")}</span>
           </Skeleton>
           <Skeleton>
-            <span className="col-span-2">Color Palette</span>
-            <span className="col-span-2">{page?.colorPalette.join(', ')}</span>
-            {/* <span className="col-span-2">{page?.colorPalette.map(item => <p key={item} className={`w-6 h-6 rounded-full bg-${item} ml-[-12px]`}>{item}</p>)}</span> */}
-          </Skeleton>
+            <span className="col-span-2 text-grey-600">Color Palette</span>
+            <span className="col-span-3 ml-6 text-grey-800">
+
+  <span className="col-span-3 ml-6 text-grey-800">
+  {page?.colorPalette.map((color, index) => (
+    <span
+      key={index}
+      className="relative group ml-[-24px] w-6 h-6 rounded-full inline-block mr-2"
+      style={{ backgroundColor: `#${color}` }}
+    >
+      {/* Tooltip */}
+      <span
+      style={{ backgroundColor: `#${color}` }}
+        className="uppercase absolute left-1/2 transform -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+      >
+        #{color}
+      </span>
+    </span>
+  ))}
+</span>
+
+</span>          </Skeleton>
           <Skeleton>
             <span className="col-span-2">Website Link</span>
             <span className="col-span-2">
