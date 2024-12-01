@@ -93,49 +93,67 @@ setFormData(prevFormData => ({
     setFormData({ ...formData, [res.name]: res.value });
   };
 
+ 
   // Handle form submission (upload)
-  const handlePublish = async () => {
-    if(!urlPattern.test(formData.websiteUrl)){
-      Notification("Please enter a valid website URL");
-    }
-    else {
-    try {
-      setIsComponentLoading(true);
-      await axios.post("/page", formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "Access-Control-Allow-Credentials": true,
-        },
-      });
-
-      // Reset form on success
-      setFormData({
-        pageImage: "",
-        pageCoverImage: "",
-        brandName: "",
-        brandDescription: "",
-        websiteUrl: "",
-        componentType: [],
-        industry: [],
-        stacks: [],
-        style: [],
-        type: [],
-        mode: "light",
-        colorPalette: [],
-      });
-
-      Notification("Page Uploaded Successfully");
-      fetchAllPages()
-      navigateTo(`/pages/${createSlug(formData.brandName)}`);
-    } catch (error) {
-      Notification("Error Uploading Pitch");
-      console.error("Error uploading pitch:", error);
-    } finally {
-      setIsComponentLoading(false);
-    }
+const handlePublish = async () => {
+  // Validate the website URL
+  if (!urlPattern.test(formData.websiteUrl)) {
+    Notification("Please enter a valid website URL");
+    return;
   }
-  };
+
+  // Validate required fields
+  if (!formData.brandName || !formData.brandDescription) {
+    Notification("Brand Name and Description are required");
+    return;
+  }
+
+  try {
+    setIsComponentLoading(true); // Show loading state
+
+    // Make API call to create the page
+    const response = await axios.post("/page", formData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "Access-Control-Allow-Credentials": true,
+      },
+    });
+
+    // Extract the created page slug or ID from the response
+    const { data } = response;
+    const newPageSlug = data.slug || createSlug(formData.brandName);
+
+    // Reset form on success
+    setFormData({
+      pageImage: "",
+      pageCoverImage: "",
+      brandName: "",
+      brandDescription: "",
+      websiteUrl: "",
+      componentType: [],
+      industry: [],
+      stacks: [],
+      style: [],
+      type: [],
+      mode: "light",
+      colorPalette: [],
+    });
+
+    Notification("Page Uploaded Successfully"); // Show success message
+    fetchAllPages(); // Refresh page list
+
+    // Navigate to the newly created page
+    navigateTo(`/pages/${newPageSlug}`);
+  } catch (error) {
+    // Handle errors gracefully
+    Notification("Error Uploading Page");
+    console.error("Error uploading Page:", error);
+  } finally {
+    setIsComponentLoading(false); // Hide loading state
+  }
+};
+
 
   return (
     <div className="w-full">

@@ -12,12 +12,15 @@ const SideSection = ({ page }) => {
   const { navigateTo } = useNavigation(); 
 
 
+
   const onDeletePitch = () => {
-  handleDeletePage(page.brandName, page._id, token, () => {
-    fetchAllPages(); 
-    navigateTo('/pages');
-  })
+    if (!page) return;
+    handleDeletePage(page.brandName, page._id, token, () => {
+      fetchAllPages();
+      navigateTo('/pages');
+    });
   };
+
   // Conditional rendering for page data
   if (!page) return <Skeleton>Loading...</Skeleton>;
 

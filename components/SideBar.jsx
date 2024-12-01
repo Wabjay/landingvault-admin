@@ -34,14 +34,15 @@ const SideBar = () => {
   // Check if the current pathname matches the item's href (exact or partial match)
   const isActive = (href) => {
     // Exact match or startsWith for more flexible matching
-    return pathname === href || pathname.startsWith(href);
+
+    return pathname === href || pathname.includes(href.toLowerCase());
   };
 
   return (
     <div className="flex">
       <div
         className={`${
-          isOpen ? "w-[200px]" : "w-20"
+          isOpen ? "w-[150px]" : "w-20"
         } bg-white border-r border-r-green-600 h-full pt-4 relative duration-300`}
       >
         {/* Sidebar toggle button */}
@@ -67,7 +68,7 @@ const SideBar = () => {
             <Link href={item.href} key={item.label}>
               <li
                 className={`${
-                  isActive(item.href)
+                  isActive(item.label)
                     ? "bg-[#000] text-white" // Active item style
                     : "bg-white text-green-600" // Default item style
                 } border border-black flex p-2 cursor-pointer hover:bg-[#000] hover:text-white text-xl font-semibold items-center gap-x-4`}
