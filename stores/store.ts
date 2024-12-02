@@ -1,5 +1,5 @@
 import axios from "@/lib/axios";
-import create, { StateCreator } from "zustand";
+import { create, StateCreator } from "zustand";
 import { persist, PersistOptions } from "zustand/middleware";
 
 

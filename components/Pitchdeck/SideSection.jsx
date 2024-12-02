@@ -69,7 +69,7 @@ const SideSection = ({ page }) => {
               {page?.colorPalette?.map((color, index) => (
                 <span
                   key={`${color}-${index}`}
-                  className="relative group ml-[-24px] w-6 h-6 rounded-full inline-block mr-2"
+                  className="relative group ml-[-18px] w-6 h-6 rounded-full inline-block mr-2"
                   style={{ backgroundColor: `#${color}` }}
                 >
                   {/* Tooltip */}
@@ -83,7 +83,7 @@ const SideSection = ({ page }) => {
               )) || "N/A"}
             </span>
           </Skeleton>
-          <Skeleton>
+          {/* <Skeleton>
             <span className="col-span-2">Website Link</span>
             <span className="col-span-2">
               {page?.websiteUrl ? (
@@ -94,7 +94,7 @@ const SideSection = ({ page }) => {
                 "N/A"
               )}
             </span>
-          </Skeleton>
+          </Skeleton> */}
         </p>
       </div>
 

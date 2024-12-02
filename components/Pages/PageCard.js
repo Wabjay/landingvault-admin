@@ -35,7 +35,7 @@ const PageCard = ({ page }) => {
     const payload = {
       pageImage: page.pageImage,
       pageCoverImage: page.pageCoverImage,
-      brandName: page.brandName + "-" + numbersString,
+      brandName: page.brandName + " " + numbersString,
       brandDescription: page.brandDescription,
       websiteUrl: page.websiteUrl,
       componentType: page.componentType,
