@@ -1,7 +1,7 @@
 "use client";
 import { useState, ChangeEvent } from "react";
 import { Button, Input, message } from "antd";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
 import { store } from "@/stores/store";
 import { SelectIndustry } from "@/components/selections/SelectIndustry";
@@ -36,11 +36,11 @@ interface FormData {
 }
 
 export default function AddPage() {
-  const { token, setIsComponentLoading,  fetchAllPages } = store();
+  const { token, setIsComponentLoading, fetchAllPages } = store();
   const router = useRouter();
   const { navigateTo } = useNavigation();
 
-  const [color, setColor] = useState<string>("")
+  const [color, setColor] = useState<string>("");
 
   const [formData, setFormData] = useState<FormData>({
     pageImage: "",
@@ -60,24 +60,24 @@ export default function AddPage() {
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
 
   // Handle change for input fields
-  const handleChange = (e: ChangeEvent<HTMLInputElement| HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-if(name === "colorPalette"){
-  const newValue = value.split(",")
-   setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: newValue.map(color => color.trim()),
-    }));
-    setColor(value)
-}else{
-setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-}
-    
+    if (name === "colorPalette") {
+      const newValue = value.split(",");
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: newValue.map((color) => color.trim()),
+      }));
+      setColor(value);
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
   };
- 
 
   // Handle image upload
   const getImage = (res: string) => {
@@ -89,107 +89,185 @@ setFormData(prevFormData => ({
   };
 
   // Handle update for form data from select components
-  const handleFormDataUpdate = (res: { name: string; value: string[] | string }) => {
+  const handleFormDataUpdate = (res: {
+    name: string;
+    value: string[] | string;
+  }) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
- 
-  // Handle form submission (upload)
-const handlePublish = async () => {
-  // Validate the website URL
-  if (!urlPattern.test(formData.websiteUrl)) {
-    Notification("Please enter a valid website URL");
-    return;
-  }
+  const handlePublish = async () => {
+    // Validate the website URL
+    if (!urlPattern.test(formData.websiteUrl)) {
+      Notification("Please enter a valid website URL");
+      return;
+    }
 
-  // Validate required fields
-  if (!formData.brandName || !formData.brandDescription) {
-    Notification("Brand Name and Description are required");
-    return;
-  }
+    // Validate required fields
+    if (!formData.brandName || !formData.brandDescription) {
+      Notification("Brand Name and Description are required");
+      return;
+    }
 
-  try {
-    setIsComponentLoading(true); // Show loading state
+    try {
+      setIsComponentLoading(true); // Show loading state
 
-    // Make API call to create the page
-    const response = await axios.post("/page", formData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "Access-Control-Allow-Credentials": true,
-      },
-    });
+      // Make API call to create the page
+      const response = await axios.post("/page", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "Access-Control-Allow-Credentials": true,
+        },
+      });
 
-    // Extract the created page slug or ID from the response
-    const { data } = response;
-    const newPageSlug = data.slug || createSlug(formData.brandName);
+      // Extract the created page slug or ID from the response
+      const { data } = response;
+      const newPageSlug = data.slug || createSlug(formData.brandName);
 
-    // Reset form on success
-    setFormData({
-      pageImage: "",
-      pageCoverImage: "",
-      brandName: "",
-      brandDescription: "",
-      websiteUrl: "",
-      componentType: [],
-      industry: [],
-      stacks: [],
-      style: [],
-      type: [],
-      mode: "light",
-      colorPalette: [],
-    });
+      // Reset form on success
+      setFormData({
+        pageImage: "",
+        pageCoverImage: "",
+        brandName: "",
+        brandDescription: "",
+        websiteUrl: "",
+        componentType: [],
+        industry: [],
+        stacks: [],
+        style: [],
+        type: [],
+        mode: "light",
+        colorPalette: [],
+      });
 
-    Notification("Page Uploaded Successfully"); // Show success message
-    fetchAllPages(); // Refresh page list
+      Notification("Page Uploaded Successfully"); // Show success message
+      fetchAllPages(); // Refresh page list
 
-    // Navigate to the newly created page
-    navigateTo(`/pages/${newPageSlug}`);
-  } catch (error) {
-    // Handle errors gracefully
-    Notification("Error Uploading Page");
-    console.error("Error uploading Page:", error);
-  } finally {
-    setIsComponentLoading(false); // Hide loading state
-  }
-};
-
+      // Navigate to the newly created page
+      navigateTo(`/pages/${newPageSlug}`);
+    } catch (error) {
+      // Handle errors gracefully
+      Notification("Error Uploading Page");
+      console.error("Error uploading Page:", error);
+    } finally {
+      setIsComponentLoading(false); // Hide loading state
+    }
+  };
 
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
         <div className="w-full laptop:max-w-[900px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
           <div className="w-full flex justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pt-[40px] tablet:pt-[80px]">
-            <BackButton color="white"/>
-           
+            <BackButton color="white" />
           </div>
-          <p className="text-[64px] font-bold leading-[72px] tracking-[-2px] text-[#2E2E27] mx-auto w-full">Create page</p>
+          <p className="text-[64px] font-bold leading-[72px] tracking-[-2px] text-[#2E2E27] mx-auto w-full">
+            Create page
+          </p>
 
           <div className="w-full px-4 tablet:px-6 laptop:px-0 flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
             <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
-              <ImageCover coverImage={getImage} coverPath="coverImages" uploaded={formData.pageCoverImage} />
+              <ImageCover
+                coverImage={getImage}
+                coverPath="coverImages"
+                uploaded={formData.pageCoverImage}
+              />
             </div>
 
-            <InputField name="brandName" label="Enter website name" placeholder="Title..." value={formData.brandName} onChange={handleChange} />
+            <InputField
+              name="brandName"
+              label="Enter website name"
+              placeholder="Title..."
+              value={formData.brandName}
+              onChange={handleChange}
+            />
 
-            <TextAreaField name="brandDescription" label="About" placeholder="Describe Pitch deck" value={formData.brandDescription} onChange={handleChange} />
+            <TextAreaField
+              name="brandDescription"
+              label="About"
+              placeholder="Describe Pitch deck"
+              value={formData.brandDescription}
+              onChange={handleChange}
+            />
 
-            <SelectField name="industry" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
-            <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType} onChange={handleFormDataUpdate} />
-            <SelectField name="stacks" label="Stack" component={SelectStack} value={formData.stacks} onChange={handleFormDataUpdate} />
-            <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
-            <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
-            <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
-            <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
+            <SelectField
+              name="industry"
+              label="Industry"
+              component={SelectIndustry}
+              value={formData.industry}
+              onChange={handleFormDataUpdate}
+            />
+            <SelectField
+              name="componentType"
+              label="Component Type"
+              component={SelectComponentType}
+              value={formData.componentType}
+              onChange={handleFormDataUpdate}
+            />
+            <SelectField
+              name="stacks"
+              label="Stack"
+              component={SelectStack}
+              value={formData.stacks}
+              onChange={handleFormDataUpdate}
+            />
+            <SelectField
+              name="mode"
+              label="Mode"
+              component={SelectMode}
+              value={formData.mode}
+              onChange={handleFormDataUpdate}
+            />
+            <SelectField
+              name="style"
+              label="Style"
+              component={SelectStyle}
+              value={formData.style}
+              onChange={handleFormDataUpdate}
+            />
+            <SelectField
+              name="type"
+              label="Type"
+              component={SelectType}
+              value={formData.type}
+              onChange={handleFormDataUpdate}
+            />
+            <InputField
+              name="colorPalette"
+              label="Enter Colors"
+              placeholder="colors..."
+              value={color}
+              onChange={handleChange}
+            />
 
             {/* <InputField type="number" name="updatedAt" label="Date" placeholder="10" value={formData.updatedAt} onChange={handleChange} /> */}
-            <InputField type="string" name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
-            {(!urlPattern.test(formData.websiteUrl))  && <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">Please enter a valid website URL</p>}
+            <InputField
+              type="string"
+              name="websiteUrl"
+              label="Website Link"
+              placeholder="www.teslim.com"
+              value={formData.websiteUrl}
+              onChange={handleChange}
+            />
+            {!urlPattern.test(formData.websiteUrl) && (
+              <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">
+                Please enter a valid website URL
+              </p>
+            )}
             <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
-              <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData.pageImage} />
+              <MainImage
+                coverImage={getMainImage}
+                coverPath="coverImages"
+                uploaded={formData.pageImage}
+              />
             </div>
-            <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
-              <span>Save and upload</span> <Loading width={20} height={20} color="#FFFFFF"/>
+            <Button
+              onClick={handlePublish}
+              className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer"
+            >
+              <span>Save and upload</span>{" "}
+              <Loading width={20} height={20} color="#FFFFFF" />
             </Button>
           </div>
         </div>
@@ -199,7 +277,14 @@ const handlePublish = async () => {
 }
 
 // Input Field Component with TypeScript
-const InputField = ({ name, label, placeholder, value, onChange, type = "text" }: {
+const InputField = ({
+  name,
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+}: {
   name: string;
   label: string;
   placeholder: string;
@@ -221,7 +306,13 @@ const InputField = ({ name, label, placeholder, value, onChange, type = "text" }
 );
 
 // Text Area Component with TypeScript
-const TextAreaField = ({ name, label, placeholder, value, onChange }: {
+const TextAreaField = ({
+  name,
+  label,
+  placeholder,
+  value,
+  onChange,
+}: {
   name: string;
   label: string;
   placeholder: string;
@@ -243,10 +334,19 @@ const TextAreaField = ({ name, label, placeholder, value, onChange }: {
 );
 
 // Select Field Component with TypeScript
-const SelectField = ({ name, label, component: Component, value, onChange }: {
+const SelectField = ({
+  name,
+  label,
+  component: Component,
+  value,
+  onChange,
+}: {
   name: string;
   label: string;
-  component: React.ComponentType<{ value: (res: { name: string; value: string[] }) => void; initialValue: string[] | string }>;
+  component: React.ComponentType<{
+    value: (res: { name: string; value: string[] }) => void;
+    initialValue: string[] | string;
+  }>;
   value: string[] | string;
   onChange: (res: { name: string; value: string[] }) => void;
 }) => (

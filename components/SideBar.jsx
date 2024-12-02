@@ -36,13 +36,10 @@ const SideBar = () => {
     
     // Exact match or startsWith for more flexible matching
 const url = href.toLowerCase() === "dashboard" ? "/" : href.toLowerCase()
-console.log("pathname", pathname, url)
     return pathname === href || pathname.includes(href.toLowerCase());
 };
 
-useEffect(()=>{
-isActive("dashboard")
-},[])
+
   return (
     <div className="flex">
       <div
