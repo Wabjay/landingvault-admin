@@ -30,12 +30,12 @@ const PageCard = ({ page }) => {
 
 
   const onDuplicatePage = async (page) => {
-    const randomNumbersInRange = Array.from({ length: 5 }, () => Math.floor(Math.random() * 9) + 1);
-    const numbersString = randomNumbersInRange.join('')
+
+    const  updatedTitle = page.componentType[0].toLowerCase().replace("page", "")
     const payload = {
       pageImage: page.pageImage,
       pageCoverImage: page.pageCoverImage,
-      brandName: page.brandName + " " + numbersString,
+      brandName: page.brandName +" "+ updatedTitle,
       brandDescription: page.brandDescription,
       websiteUrl: page.websiteUrl,
       componentType: page.componentType,

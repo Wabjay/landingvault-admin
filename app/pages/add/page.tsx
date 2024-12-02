@@ -97,6 +97,15 @@ export default function AddPage() {
   };
 
   const handlePublish = async () => {
+
+    const updatedTitle = formData.componentType[0].toLowerCase().replace("page", "");
+
+    // Creating the payload with the updated brandName
+    const payload = {
+      ...formData,
+      brandName: formData.brandName +" "+ updatedTitle // Dynamically setting the updated brandName
+    };
+
     // Validate the website URL
     if (!urlPattern.test(formData.websiteUrl)) {
       Notification("Please enter a valid website URL");
@@ -111,9 +120,9 @@ export default function AddPage() {
 
     try {
       setIsComponentLoading(true); // Show loading state
-
+console.log(payload)
       // Make API call to create the page
-      const response = await axios.post("/page", formData, {
+      const response = await axios.post("/page", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -123,7 +132,8 @@ export default function AddPage() {
 
       // Extract the created page slug or ID from the response
       const { data } = response;
-      const newPageSlug = data.slug || createSlug(formData.brandName);
+      // const newPageSlug = createSlug(payload.brandName);
+      const newPageSlug = data.slug || createSlug(payload.brandName);
 
       // Reset form on success
       setFormData({

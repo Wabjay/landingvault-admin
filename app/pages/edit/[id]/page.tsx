@@ -83,7 +83,7 @@ export default function UpdatePage() {
         ...formData,
         ...page,
       });
-      const colors = page.colorPalette.join(", ")
+      const colors = page.colorPalette.join(", ") || "N/A"
       setColor(colors)
     }
   }, []);
@@ -93,6 +93,7 @@ export default function UpdatePage() {
        // URL validation for websiteUrl field
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
 
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if(name === "colorPalette"){
@@ -124,13 +125,20 @@ export default function UpdatePage() {
   };
 
   const handlePublish = async () => {
+    const updatedTitle = formData.componentType[0].toLowerCase().replace("page", "");
+
+// Creating the payload with the updated brandName
+const payload = {
+  ...formData,
+  brandName: formData.brandName +" "+ updatedTitle // Dynamically setting the updated brandName
+};
     if(!urlPattern.test(formData.websiteUrl)){
       Notification("Please enter a valid website URL");
     }
     else {
     try {
       setIsComponentLoading(true);
-      await axios.patch(`/page/${pageData._id}`, formData, {
+      await axios.patch(`/page/${pageData._id}`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -155,8 +163,8 @@ export default function UpdatePage() {
         __v: 0,
         id: "",
       });
-      fetchSinglePage(createSlug(formData.brandName))
-      router.push(`/pages/${createSlug(formData.brandName)}`);
+      fetchSinglePage(createSlug(payload.brandName))
+      router.push(`/pages/${createSlug(payload.brandName)}`);
       Notification("Page Updated Successfully");
     } catch (error) {
       Notification("Error Updating Page");
