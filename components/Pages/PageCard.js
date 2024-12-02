@@ -18,9 +18,10 @@ const PageCard = ({ page }) => {
 
   const onDeletePage = async (page) => {
     try {
-      await handleDeletePage(page.brandName, page._id, token);
-      fetchAllPages();
-      navigateTo('/pages');
+      await handleDeletePage(page.brandName, page._id, token, () => {
+        fetchAllPages();
+        navigateTo("/pages");
+      })
     } catch (error) {
       console.error("Error deleting page:", error);
     }
