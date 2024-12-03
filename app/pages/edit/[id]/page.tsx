@@ -125,8 +125,10 @@ export default function UpdatePage() {
   };
 
   const handlePublish = async () => {
-    const updatedTitle = formData.componentType[0].toLowerCase().replace("page", "");
-
+    const updatedTitle = formData.componentType[0]
+    .toLowerCase()
+    .replace("page", "")
+    .trim();
 // Creating the payload with the updated brandName
 const payload = {
   ...formData,

@@ -31,11 +31,11 @@ const PageCard = ({ page }) => {
 
   const onDuplicatePage = async (page) => {
 
-    const  updatedTitle = page.componentType[0].toLowerCase().replace("page", "")
+    const  updatedTitle = Math.floor(Math.random() * 10) + 1
     const payload = {
       pageImage: page.pageImage,
       pageCoverImage: page.pageCoverImage,
-      brandName: page.brandName +" "+ updatedTitle,
+      brandName: page.brandName + updatedTitle,
       brandDescription: page.brandDescription,
       websiteUrl: page.websiteUrl,
       componentType: page.componentType,
@@ -46,6 +46,7 @@ const PageCard = ({ page }) => {
       mode: page.mode,
       colorPalette: page.colorPalette,
     };
+      console.log("payload ", payload)
     try {
       setIsOverlayLoading(true); // Show loading state
 
@@ -95,7 +96,7 @@ const PageCard = ({ page }) => {
           </Link>
           <button onClick={() => onDeletePage(page)} className="border border-[#FF6464] bg-[#FF6464] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Delete</button>
         </div>
-        <button onClick={() => onDuplicatePage(page)} className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Duplicate Page</button>
+        <button onClick={()=>onDuplicatePage(page)} className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Duplicate Page</button>
         </div>
         
         <Link href={`/pages/${createSlug(page?.brandName)}`} className="absolute top-2 right-2">
