@@ -40,9 +40,9 @@ export default function AddPage() {
   const router = useRouter();
   const { navigateTo } = useNavigation();
 
-  const [color, setColor] = useState<string>("");
+  const [color, setColor] = useState("");
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     pageImage: "",
     pageCoverImage: "",
     brandName: "",
