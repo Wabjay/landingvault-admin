@@ -21,25 +21,25 @@ import { createSlug } from "@/components/blocks/slug";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 
 // Define types
-interface Page {
-  _id: string;
-  pageImage: string;
-  pageCoverImage: string;
-  brandName: string;
-  brandDescription: string;
-  websiteUrl: string;
-  componentType: string[];
-  industry: string[];
-  stacks: string[];
-  style: string[];
-  type: string[];
-  mode: string;
-  colorPalette: string[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  id: string;
-}
+// interface Page {
+//   _id: string;
+//   pageImage: string;
+//   pageCoverImage: string;
+//   brandName: string;
+//   brandDescription: string;
+//   websiteUrl: string;
+//   componentType: string[];
+//   industry: string[];
+//   stacks: string[];
+//   style: string[];
+//   type: string[];
+//   mode: string;
+//   colorPalette: string[];
+//   createdAt: string;
+//   updatedAt: string;
+//   __v: number;
+//   id: string;
+// }
 
 export default function UpdatePage() {
   const { token, setIsComponentLoading, fetchSinglePage, page: pageData } = store();
@@ -53,10 +53,10 @@ export default function UpdatePage() {
     }
   }, []);
 
-  const [error, setError] = useState<String>("")
-  const [color, setColor] = useState<string>("")
+  const [error, setError] = useState("")
+  const [color, setColor] = useState("")
 
-    const [formData, setFormData] = useState<Page>({
+    const [formData, setFormData] = useState({
     _id: "",
     pageImage: "",
     pageCoverImage: "",
@@ -94,7 +94,7 @@ export default function UpdatePage() {
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
 
   
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     if(name === "colorPalette"){
       const newValue = value.split(",")
@@ -108,12 +108,12 @@ export default function UpdatePage() {
   }
 };
 
-  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const getImage = (res: string) => {
+  const getImage = (res) => {
     setFormData({ ...formData, pageCoverImage: res,  pageImage: res  });
   };
 
@@ -121,7 +121,7 @@ export default function UpdatePage() {
   //   setFormData({ ...formData, pageImage: res });
   // };
 
-  const handleFormDataUpdate = (res: { name: string; value: string[] | string }) => {
+  const handleFormDataUpdate = (res) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
@@ -204,7 +204,7 @@ const payload = {
             <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType} onChange={handleFormDataUpdate} />
             <SelectField name="industry" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
             <SelectField name="stacks" label="Stack" component={SelectStack} value={formData.stacks} onChange={handleFormDataUpdate} />
-            <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} initialValue={formData.mode} onChange={handleFormDataUpdate} />
+            <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
             <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
             <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
             <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
@@ -222,16 +222,16 @@ const payload = {
   );
 }
 
-interface InputFieldProps {
-  name: string;
-  label: string;
-  placeholder: string;
-  value: string | number;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
-}
+// interface InputFieldProps {
+//   name: string;
+//   label: string;
+//   placeholder: string;
+//   value: string | number;
+//   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+//   type?: string;
+// }
 
-const InputField = ({ name, label, placeholder, value, onChange, type = "text" }: InputFieldProps) => (
+const InputField = ({ name, label, placeholder, value, onChange, type = "text" }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
     <input
@@ -246,15 +246,15 @@ const InputField = ({ name, label, placeholder, value, onChange, type = "text" }
   </div>
 );
 
-interface TextAreaFieldProps {
-  name: string;
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-}
+// interface TextAreaFieldProps {
+//   name: string;
+//   label: string;
+//   placeholder: string;
+//   value: string;
+//   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+// }
 
-const TextAreaField = ({ name, label, placeholder, value, onChange }: TextAreaFieldProps) => (
+const TextAreaField = ({ name, label, placeholder, value, onChange }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
     <TextArea
@@ -269,15 +269,15 @@ const TextAreaField = ({ name, label, placeholder, value, onChange }: TextAreaFi
   </div>
 );
 
-interface SelectFieldProps {
-  name: string;
-  label: string;
-  component: React.ComponentType<{ value: (res: { name: string; value: string[] }) => void; initialValue: string[] | string }>;
-  value: string[] | string;
-  onChange: (res: { name: string; value: string[] | string }) => void;
-}
+// interface SelectFieldProps {
+//   name: string;
+//   label: string;
+//   component: React.ComponentType<{ value: (res: { name: string; value: string[] }) => void; initialValue: string[] | string }>;
+//   value: string[] | string;
+//   onChange: (res: { name: string; value: string[] | string }) => void;
+// }
 
-const SelectField = ({ name, label, component: Component, value, onChange }: SelectFieldProps) => (
+const SelectField = ({ name, label, component: Component, value, onChange }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
     <Component

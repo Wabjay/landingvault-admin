@@ -37,7 +37,7 @@ const Pages = () => {
     }
   }
     shuffleArray();
-    console.log(pagesData)
+    // console.log(pagesData)
   }, [pagesData]);
 
   

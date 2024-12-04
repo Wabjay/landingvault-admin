@@ -4,7 +4,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 
 
 
-export default function LoadImage({alt, src, style, height}) {
+export default function LoadImage({alt, src, style, height="100%"}) {
   return (
     <div
     className={`relative w-full overflow-hidden ${style}`}

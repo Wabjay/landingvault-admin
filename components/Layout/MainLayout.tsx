@@ -14,7 +14,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   useEffect(() => {
     const unprotectedRoutes = ['/login'];
     setIsUnprotectedRoute(unprotectedRoutes.includes(pathname));
-    console.log(pathname)
   }, [pathname]);
 
   return (

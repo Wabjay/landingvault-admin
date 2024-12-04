@@ -20,20 +20,20 @@ import { Notification } from "@/components/blocks/Notification";
 import { useNavigation } from "@/components/utils/navigations";
 
 // Define types for form data
-interface FormData {
-  pageImage: string;
-  pageCoverImage: string;
-  brandName: string;
-  brandDescription: string;
-  websiteUrl: string;
-  componentType: string[];
-  industry: string[];
-  stacks: string[];
-  style: string[];
-  type: string[];
-  mode: string;
-  colorPalette: string[];
-}
+// interface FormData {
+//   pageImage: string;
+//   pageCoverImage: string;
+//   brandName: string;
+//   brandDescription: string;
+//   websiteUrl: string;
+//   componentType: string[];
+//   industry: string[];
+//   stacks: string[];
+//   style: string[];
+//   type: string[];
+//   mode: string;
+//   colorPalette: string[];
+// }
 
 export default function AddPage() {
   const { token, setIsComponentLoading, fetchAllPages } = store();
@@ -60,9 +60,7 @@ export default function AddPage() {
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
 
   // Handle change for input fields
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "colorPalette") {
       const newValue = value.split(",");
@@ -80,7 +78,7 @@ export default function AddPage() {
   };
 
   // Handle image upload
-  const getImage = (res: string) => {
+  const getImage = (res) => {
     setFormData({ ...formData, pageCoverImage: res,  pageImage: res  });
   };
 
@@ -89,10 +87,7 @@ export default function AddPage() {
   // };
 
   // Handle update for form data from select components
-  const handleFormDataUpdate = (res: {
-    name: string;
-    value: string[] | string;
-  }) => {
+  const handleFormDataUpdate = (res) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
@@ -122,7 +117,7 @@ export default function AddPage() {
 
     try {
       setIsComponentLoading(true); // Show loading state
-console.log(payload)
+// console.log(payload)
       // Make API call to create the page
       const response = await axios.post("/page", payload, {
         headers: {
@@ -299,13 +294,6 @@ const InputField = ({
   value,
   onChange,
   type = "text",
-}: {
-  name: string;
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
 }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
@@ -327,12 +315,6 @@ const TextAreaField = ({
   placeholder,
   value,
   onChange,
-}: {
-  name: string;
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
@@ -355,15 +337,6 @@ const SelectField = ({
   component: Component,
   value,
   onChange,
-}: {
-  name: string;
-  label: string;
-  component: React.ComponentType<{
-    value: (res: { name: string; value: string[] }) => void;
-    initialValue: string[] | string;
-  }>;
-  value: string[] | string;
-  onChange: (res: { name: string; value: string[] }) => void;
 }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
