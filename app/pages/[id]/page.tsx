@@ -19,7 +19,7 @@ const SinglePitch = () => {
     if (pageName) {
       fetchSinglePage(pageName);
     }
-  }, [pathname]); // Removed fetchSinglePage from dependency
+  }, []); // Removed fetchSinglePage from dependency
 
   return (
     <div className="w-full">

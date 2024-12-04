@@ -51,7 +51,7 @@ export default function UpdatePage() {
     if (pageName) {
       fetchSinglePage(pageName);
     }
-  }, [fetchSinglePage, pathname]);
+  }, []);
 
   const [error, setError] = useState<String>("")
   const [color, setColor] = useState<string>("")
@@ -68,7 +68,7 @@ export default function UpdatePage() {
     stacks: [],
     style: [],
     type: [],
-    mode: "light", // Default mode
+    mode: "", // Default mode
     colorPalette: [],
     createdAt: "",
     updatedAt: "",
@@ -86,7 +86,7 @@ export default function UpdatePage() {
       const colors = page.colorPalette.join(", ") || "N/A"
       setColor(colors)
     }
-  }, []);
+  }, [pageData]);
 
 
   
@@ -102,7 +102,8 @@ export default function UpdatePage() {
         ...formData, [name]: newValue.map(color => color.trim()),
         });
         setColor(value)
-    }else{
+    }
+  else{
     setFormData({ ...formData, [name]: value });
   }
 };
@@ -113,12 +114,12 @@ export default function UpdatePage() {
   };
 
   const getImage = (res: string) => {
-    setFormData({ ...formData, pageCoverImage: res });
+    setFormData({ ...formData, pageCoverImage: res,  pageImage: res  });
   };
 
-  const getMainImage = (res: string) => {
-    setFormData({ ...formData, pageImage: res });
-  };
+  // const getMainImage = (res: string) => {
+  //   setFormData({ ...formData, pageImage: res });
+  // };
 
   const handleFormDataUpdate = (res: { name: string; value: string[] | string }) => {
     setFormData({ ...formData, [res.name]: res.value });
@@ -158,7 +159,7 @@ const payload = {
         stacks: [],
         style: [],
         type: [],
-        mode: "light",
+        mode: "",
         colorPalette: [],
         createdAt: "",
         updatedAt: "",
@@ -182,9 +183,11 @@ const payload = {
       <div className="bg-[#FFF]">
       <LoadingOverlay />
         <div className="w-full laptop:max-w-[700px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
-          <div className="w-full flex justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 py-[40px] tablet:pt-[80px]">
+          <div className="w-full flex sticky top-[-20px] tablet:top-[-60px] z-50 bg-white justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pb-5 pt-10 tablet:pt-[80px]">
             <BackButton color="white" />
-           
+            <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
+              <span>Update Page</span> <Loading width={20} height={20} color="#FFFFFF" />
+            </Button>
           </div>
 
           <p className="text-[64px] font-bold leading-[72px] tracking-[-2px] text-[#2E2E27] mx-auto w-full">Edit Page</p>
@@ -201,19 +204,17 @@ const payload = {
             <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType} onChange={handleFormDataUpdate} />
             <SelectField name="industry" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
             <SelectField name="stacks" label="Stack" component={SelectStack} value={formData.stacks} onChange={handleFormDataUpdate} />
-            <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
+            <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} initialValue={formData.mode} onChange={handleFormDataUpdate} />
             <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
             <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
             <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
 
             <InputField name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
               {(!urlPattern.test(formData.websiteUrl))  && <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">Please enter a valid website URL</p>}
-            <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
+            {/* <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <MainImage coverImage={getMainImage} coverPath="coverImages" uploaded={formData.pageImage} />
-            </div>
-            <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
-              <span>Update Page</span> <Loading width={20} height={20} color="#FFFFFF" />
-            </Button>
+            </div> */}
+        
           </div>
         </div>
       </div>
