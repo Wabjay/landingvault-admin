@@ -19,6 +19,8 @@ import { SelectStyle } from "@/components/selections/SelectStyle";
 import { SelectType } from "@/components/selections/SelectType";
 import { createSlug } from "@/components/blocks/slug";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
+import { useNavigation } from "@/components/utils/navigations";
+
 
 // Define types
 // interface Page {
@@ -45,6 +47,7 @@ export default function UpdatePage() {
   const { token, setIsComponentLoading, fetchSinglePage, page: pageData } = store();
   const pathname = usePathname();
   const router = useRouter();
+  const { navigateTo } = useNavigation();
 
   useEffect(() => {
     const pageName = pathname.split("/")[3]?.toLowerCase();
@@ -167,8 +170,8 @@ const payload = {
         id: "",
       });
       fetchSinglePage(createSlug(payload.brandName))
-      router.push(`/pages/${createSlug(payload.brandName)}`);
       Notification("Page Updated Successfully");
+      navigateTo(`/pages/${payload.brandName}`);     
     } catch (error) {
       Notification("Error Updating Page");
       console.error("Error updating page:", error);
