@@ -28,7 +28,7 @@ export function SelectComponentType({ value, initialValue }: SelectCategoryTypeP
   useEffect(() => {
     // Fetch component tags if not already loaded
     if (!metrics.components.data.length) {
-      fetchComponents(token);
+      fetchComponents();
     }
   }, [metrics.components.data, fetchComponents, token]);
 

@@ -73,7 +73,11 @@ type StoreState = {
   link: string;
   metrics: Metrics;
   users: any[];
-  components: any[];
+  components: {
+    data: any[];
+    message: string;
+    status: boolean;
+  };
   industries: any[];
   stacks: any[];
   styles: any[];
@@ -92,6 +96,16 @@ type StoreState = {
     status: number;
     pagination: { total: number; page: number; pages: number };
   };
+  loadedPages: {
+    data: Page[];
+    message: string;
+    status: number;
+    pagination: { total: number; page: number; pages: number };
+  };
+  sortedPages: Page[];
+  searchInput: string,
+  showSearch: boolean,
+  searchedPages: Page[];
   error: string | null;  // Added error state
 };
 
@@ -103,12 +117,12 @@ const initialState: StoreState = {
   token: "",
   link: "/pitch-decks",
   metrics: {
-    users: {data: []},
-    components: {data: []},
-    industries:  {data: [ ]},
-    stacks: {data: []},
-    styles: {data: []},
-    types: {data: []},
+    users: { data: [] },
+    components: { data: [] },
+    industries: { data: [] },
+    stacks: { data: [] },
+    styles: { data: [] },
+    types: { data: [] },
   },
   user: {},
   SingleData: {},
@@ -133,17 +147,31 @@ const initialState: StoreState = {
   // },
   error: null,
   users: [],
-  components: [],
+  components: {
+    data: [],
+    message: "",
+    status: false
+  },
   industries: [],
   stacks: [],
   styles: [],
-  types: []
+  types: [],
+  loadedPages: {
+    data: [],
+    message: "",
+    status: 0,
+    pagination: { total: 0, page: 0, pages: 0 },
+  },
+  sortedPages:  [],
+  searchedPages: [],
+  showSearch: false,
+  searchInput: ""
 };
 
 // Store interface defining state and actions
 interface Store extends StoreState {
   fetchUsers: (token: string) => void;
-  fetchComponents: (token: string) => void;
+  fetchComponents: () => void;
   fetchIndustries: (token: string) => void;
   fetchStacks: (token: string) => void;
   fetchTypes: (token: string) => void;
@@ -152,7 +180,9 @@ interface Store extends StoreState {
   setShowLogin: (show: boolean) => void;
   setShowData: (show: boolean) => void;
   setIsLoggedin: (status: boolean) => void;
+  setSearch: (show: string) => void;
   setIsLoading: (status: boolean) => void;
+  fetchPages: (pages: Page[]) => void;
   setIsComponentLoading: (status: boolean) => void;
   setIsOverlayLoading: (status: boolean) => void;
   setTags: (tags: string[]) => void;
@@ -211,7 +241,7 @@ export const store = create<Store>(
       setTags: (tags) => set({ tags }),
       setImages: (images) => set({ images }),
       setError: (message) => set({ error: message }),
-
+      setSearch: (value) => (value !== "" ? set({ showSearch: true, searchInput: value }) : set({ showSearch: false, searchInput:"" })),
       fetchUsers: () => fetchData("/user", set, "users"),
       fetchComponents: () => fetchData("/components", set, "components"),
       fetchIndustries: () => fetchData("/industry", set, "industries"),
@@ -227,12 +257,17 @@ export const store = create<Store>(
             .get(`/page`)
             .then(function (response) {
               set({ pages: response.data , overlayLoading: false });
-              console.log(response.data)
+              // console.log(response.data)
             });
         } catch (error) {
           console.error("Error fetching Data:", error);
           set({ overlayLoading: false }); // Corrected from `loading: false`
       }
+      },
+      fetchPages: async (response: any) => {
+        set({ overlayLoading: true });
+        // console.log(response)
+        set({ sortedPages: response, overlayLoading: false  });
       },
 
       fetchSinglePage: async (title: string) => {
@@ -263,7 +298,7 @@ export const store = create<Store>(
             })
             .then(function (response) {
               set({ SingleData: response.data , overlayLoading: false });
-              console.log(response.data)
+              // console.log(response.data)
             });
         } catch (error) {
           console.error("Error fetching Data:", error);

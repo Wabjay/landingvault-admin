@@ -58,7 +58,7 @@ export default function AddCategory() {
 
       });
         fetchUsers(token)
-        fetchComponents(token)
+        fetchComponents()
         fetchTypes(token)
         fetchStacks(token)
         fetchStyles(token)

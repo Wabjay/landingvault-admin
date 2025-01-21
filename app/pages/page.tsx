@@ -5,43 +5,15 @@ import EmptyPitch from "@/components/Pitchdeck/EmptyPitch";
 import { store } from "@/stores/store";
 import Link from "next/link";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
+import Tags from "@/components/blocks/Tags";
+import Search from "@/components/blocks/Search";
 
 
 
 const Pages = () => {
-  const [array, setArray] = useState<Page[]>([]);
 
-  const {componentLoading, fetchAllPages, pages:pagesData} = store()
-  
-  
-  
-    useEffect(() => {
-      fetchAllPages()
-    }, [fetchAllPages]);
-  
-  
-    
+  const {sortedPages:pagesData} = store()
 
-  useEffect(() => {
-    const shuffleArray = async () => {
-      if (pagesData.data) {
-      const shuffledArray = [...pagesData.data];
-      // for (let i = shuffledArray.length - 1; i > 0; i--) {
-      //   const j = Math.floor(Math.random() * (i + 1));
-      //   [shuffledArray[i], shuffledArray[j]] = [
-      //     shuffledArray[j],
-      //     shuffledArray[i],
-      //   ];
-      // }
-      setArray(shuffledArray)
-    }
-  }
-    shuffleArray();
-    // console.log(pagesData)
-  }, [pagesData]);
-
-  
-  
 
   return (
     <div className="w-full">
@@ -52,19 +24,27 @@ const Pages = () => {
           <div className="flex justify-between">
 
           <p className='text-grey-800 text-40 font-bold mb-5 capitalize'>Pages</p>
+          <Search />
           <Link href={`/pages/add`}
         className="text-white border border-green-600 bg-green-600 w-[175px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90 "
       >Create pages 
       </Link>  
                       </div>
-                      {(pagesData.data?.length === 0 || pagesData.status === 404) ? (
+                      <div className="w-fit max-w-[1100px] ml-0 overflow-hidden no-scrollbar px-4 tablet:px-6 laptop:px-8 desktop:px-0">
+                      <Tags />
+                      </div>
+                      {(pagesData?.length === 0 ) ? (
     <EmptyPitch />
   ) : (
+    <div>
+
         <div className="w-fit grid tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 gap-4 gap-y-10 mt-10">
-      {array.map((item: Page, index: Key | null | undefined) => (
+      {pagesData && pagesData.map((item: Page, index: Key | null | undefined) => (
           <PageCard key={index} page={item} />
         ))}
-        </div>)}
+        </div>
+    </div>
+        )}
          
         </div>
       </div>

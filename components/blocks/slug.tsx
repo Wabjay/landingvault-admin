@@ -7,3 +7,9 @@ export function createSlug(str: string) {
       .trim(); // Trim any leading or trailing spaces or dashes
   }
   
+  export function removeSlug(str: string) {
+    return str
+    .replace(/-/g, ' ') // Replace hyphens with spaces
+    .split(' ') // Split the string by spaces
+    .join(' '); // Join the words back together
+  }

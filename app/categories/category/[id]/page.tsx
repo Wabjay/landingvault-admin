@@ -100,7 +100,7 @@ setEdit(edit)
           description: "",
         })
       fetchUsers(token)
-        fetchComponents(token)
+        fetchComponents()
         fetchTypes(token)
         fetchStacks(token)
         fetchStyles(token)
@@ -116,7 +116,7 @@ setEdit(edit)
   };
   let navigate =(value: string)=>{
     fetchUsers(token)
-    fetchComponents(token)
+    fetchComponents()
     fetchTypes(token)
     fetchStacks(token)
     fetchStyles(token)
