@@ -71,9 +71,9 @@ const url = href.toLowerCase() === "dashboard" ? "/" : href.toLowerCase()
               <li
                 className={`${
                   isActive(item.label)
-                    ? "bg-[#000] text-white" // Active item style
+                    ? "bg-[#000] text-[#fff]" // Active item style
                     : "bg-white text-green-600" // Default item style
-                } border border-black flex p-2 cursor-pointer hover:bg-[#000] hover:text-white text-xl font-semibold items-center gap-x-4`}
+                } border border-black flex p-2 cursor-pointer hover:bg-[#000] hover:text-[#fff] text-xl font-semibold items-center gap-x-4`}
               >
                 {isOpen && (
                   <span className="origin-left duration-200">{item.label}</span>

@@ -12,7 +12,7 @@ const Cards = () => {
 
   useEffect(()=>{
 setMetrics(getMetrics)
-console.log(getMetrics)
+// console.log(getMetrics)
   },[getMetrics])
 
 

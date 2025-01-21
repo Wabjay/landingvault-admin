@@ -18,14 +18,16 @@ export default function Tags() {
   const [showRightArrow, setShowRightArrow] = useState(false);
   const tagsContainerRef = useRef<HTMLUListElement | null>(null);
 
-  const {metrics, setSearch,pages, fetchPages } = store();
+  const {metrics, pages, fetchPages } = store();
 
   const sortTag = (tag: string) => {
     setActiveTag(tag);
-    setSearch("");
-    const filteredPages = pages.data.filter(page => page.componentType[0] === tag);
-    fetchPages(filteredPages)
-  };
+  }
+    
+    useEffect(()=>{
+      const filteredPages = pages.data.filter(page => page.componentType[0] === activeTag);
+      fetchPages(filteredPages)
+    },[activeTag, pages])
 
 const components = metrics.components.data
   useEffect(() => {

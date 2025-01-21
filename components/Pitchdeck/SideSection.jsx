@@ -60,7 +60,7 @@ const SideSection = ({ page }) => {
           <Skeleton>
             <span className="col-span-2">Date</span>
             <span className="col-span-2">
-              {page?.date ? moment(page.createdAt).format("LL") : "N/A"}
+              {page?.createdAt ? moment(page?.createdAt).format("LL") : "N/A"}
             </span>
           </Skeleton>
           <Skeleton>
