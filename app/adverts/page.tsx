@@ -1,7 +1,6 @@
 // "use client"
 import { FC } from 'react';
 import moment from 'moment';
-import SkeletonLoader from '@/components/Skeleton';
 
 type Click = {
   _id: string;
