@@ -25,7 +25,7 @@ export default function Tags() {
   }
     
     useEffect(()=>{
-      const filteredPages = pages.data.filter(page => page.componentType[0] === activeTag);
+      const filteredPages = pages?.data?.filter(page => page?.componentType[0] === activeTag);
       fetchPages(filteredPages)
     },[activeTag, pages])
 

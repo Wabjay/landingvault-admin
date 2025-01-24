@@ -18,17 +18,17 @@ const Pages = () => {
   return (
     <div className="w-full">
     <div className="bg-[#FFF]">
-      <div className="w-full  p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-7 tablet:gap-10 laptop:gap-14 desktop:gap-24">
+      <div className="relative w-full max-w-[1100px] p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-7 tablet:gap-10 laptop:gap-14 desktop:gap-24">
        <LoadingOverlay />
-        <div>
+        <div> 
+           <Link href={`/pages/add`} className="sticky overflow-hidden top-16 ml-auto mr-0 z-20 text-white border border-green-600 bg-green-600 w-[175px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90 "
+      >Create pages 
+      </Link>  
           <div className="flex justify-between">
 
           <p className='text-grey-800 text-40 font-bold mb-5 capitalize'>Pages</p>
           <Search />
-          <Link href={`/pages/add`}
-        className="text-white border border-green-600 bg-green-600 w-[175px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90 "
-      >Create pages 
-      </Link>  
+        
                       </div>
                       <div className="w-fit max-w-[1100px] ml-0 overflow-hidden no-scrollbar px-4 tablet:px-6 laptop:px-8 desktop:px-0">
                       <Tags />

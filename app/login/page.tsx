@@ -93,7 +93,7 @@ const LoginPage: React.FC = () => {
             placeholder="Enter your email address"
             className={`bg-white border h-12 px-4 ${error ? 'border-red-500' : 'border-gray-400'}`}
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
             aria-invalid={!!error}
             aria-describedby="email-error"
           />

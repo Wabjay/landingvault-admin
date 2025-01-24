@@ -23,6 +23,7 @@ const SideBar = () => {
     { label: "Sponsorship", href: "/sponsorship", icon: ChartIcon },
     { label: "Submission", href: "/submission", icon: ChartIcon },
     { label: "Subscribers", href: "/subscribers", icon: ChartIcon },
+    { label: "Adverts", href: "/adverts", icon: ChartIcon },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
