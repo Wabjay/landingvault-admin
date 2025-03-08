@@ -33,6 +33,13 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, and Opera */
 }
+/* 
+.page_card span{
+    height: 380px;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+   } */
 
 @layer utilities {
   .text-balance {

@@ -97,10 +97,19 @@ export default function AddPage() {
     .toLowerCase()
     .replace("page", "")
     .trim();
+
+    let brandName = formData.brandName.replace(/\s+/g, " ").trim(); // Replaces multiple spaces with a single space
+  
+    // Check if updatedTitle is already in brandName
+    if (!brandName.includes(updatedTitle)) {
+      updatedBrandName = brandName + " " + updatedTitle;
+      formData.brandName = updatedBrandName.replace(/\s+/g, " ").trim();
+    } else {
+      formData.brandName = brandName.replace(/\s+/g, " ").trim();
+    }
     // Creating the payload with the updated brandName
     const payload = {
       ...formData,
-      brandName: formData.brandName +" "+ updatedTitle // Dynamically setting the updated brandName
     };
 
     // Validate the website URL

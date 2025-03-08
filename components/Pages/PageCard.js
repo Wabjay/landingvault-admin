@@ -84,14 +84,14 @@ const PageCard = ({ page }) => {
           effect="blur"
           src={page?.pageCoverImage}
           height={380}
-          style={`w-full h-[380px]`}
+          style={`w-full h-[380px] page_card`}
         />
         <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 p-2 mx-auto'>
         <div className='flex items-center gap-4 p-2 mx-auto'>
-          <Link href={{ pathname: `/pages/${createSlug(page?.brandName)}` }}>
+          <Link href={{ pathname: `/pages/${createSlug(page?._id)}` }}>
             <button className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-[#2E2E2F] font-bold hover:bg-slate-300">View</button>
           </Link>
-          <Link href={{ pathname: `/pages/edit/${createSlug(page?.brandName)}` }}>
+          <Link href={{ pathname: `/pages/edit/${createSlug(page?._id)}` }}>
             <button className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-[#2E2E2F] font-bold hover:bg-slate-300">Edit</button>
           </Link>
           <button onClick={() => onDeletePage(page)} className="border border-[#FF6464] bg-[#FF6464] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Delete</button>
@@ -99,7 +99,7 @@ const PageCard = ({ page }) => {
         <button onClick={()=>onDuplicatePage(page)} className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Duplicate Page</button>
         </div>
         
-        <Link href={`/pages/${createSlug(page?.brandName)}`} className="absolute top-2 right-2">
+        <Link href={`/pages/${createSlug(page?._id)}`} className="absolute top-2 right-2">
           <Image src={Arrow} alt="Arrow Up" width="24px" height='24px' className='hover:border-[#F2F1E8] hover:border hover:bg-[#F2F1E8]' />
         </Link>
       </div>

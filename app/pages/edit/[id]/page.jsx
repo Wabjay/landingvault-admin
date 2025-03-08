@@ -130,63 +130,78 @@ export default function UpdatePage() {
 
   const handlePublish = async () => {
     const updatedTitle = formData.componentType[0]
-    .toLowerCase()
-    .replace("page", "")
-    .trim();
-// Creating the payload with the updated brandName
-const payload = {
-  ...formData,
-  brandName: formData.brandName +" "+ updatedTitle // Dynamically setting the updated brandName
-};
-    if(!urlPattern.test(formData.websiteUrl)){
+      .toLowerCase()
+      .replace("page", "")
+      .trim();
+  
+    // Remove extra spaces
+    let brandName = formData.brandName.replace(/\s+/g, " ").trim(); // Replaces multiple spaces with a single space
+  
+    // Check if updatedTitle is already in brandName
+    if (!brandName.includes(updatedTitle)) {
+      updatedBrandName = brandName + " " + updatedTitle;
+      formData.brandName = updatedBrandName.replace(/\s+/g, " ").trim();
+    } else {
+      formData.brandName = brandName.replace(/\s+/g, " ").trim();
+    }
+  
+    const payload = {
+      ...formData, // Use the correctly updated brandName
+    };
+  
+    console.log("brandName: ", formData.brandName);
+  
+    if (!urlPattern.test(formData.websiteUrl)) {
       Notification("Please enter a valid website URL");
+    } else {
+      try {
+        setIsComponentLoading(true);
+        await axios.patch(`/page/${pageData?._id}`, payload, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        setFormData({
+          _id: "",
+          pageImage: "",
+          pageCoverImage: "",
+          brandName: "",
+          brandDescription: "",
+          websiteUrl: "",
+          componentType: [],
+          industry: [],
+          stacks: [],
+          style: [],
+          type: [],
+          mode: "",
+          colorPalette: [],
+          createdAt: "",
+          updatedAt: "",
+          __v: 0,
+          id: "",
+        });
+  
+        fetchSinglePage(createSlug(payload.brandName));
+        Notification("Page Updated Successfully");
+        navigateTo(`/pages/${payload._id}`);
+      } catch (error) {
+        Notification("Error Updating Page");
+        console.error("Error updating page:", error);
+      } finally {
+        setIsComponentLoading(false);
+      }
     }
-    else {
-    try {
-      setIsComponentLoading(true);
-      await axios.patch(`/page/${pageData._id}`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setFormData({
-        _id: "",
-        pageImage: "",
-        pageCoverImage: "",
-        brandName: "",
-        brandDescription: "",
-        websiteUrl: "",
-        componentType: [],
-        industry: [],
-        stacks: [],
-        style: [],
-        type: [],
-        mode: "",
-        colorPalette: [],
-        createdAt: "",
-        updatedAt: "",
-        __v: 0,
-        id: "",
-      });
-      fetchSinglePage(createSlug(payload.brandName))
-      Notification("Page Updated Successfully");
-      navigateTo(`/pages/${payload.brandName}`);     
-    } catch (error) {
-      Notification("Error Updating Page");
-      console.error("Error updating page:", error);
-    } finally {
-      setIsComponentLoading(false);
-    }
-  }
-};
+  };
+  
 
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
       <LoadingOverlay />
         <div className="w-full laptop:max-w-[700px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
-          <div className="w-full flex sticky top-[-20px] tablet:top-[-60px] z-50 bg-white justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pb-5 pt-10 tablet:pt-[80px]">
+          <div className="w-full bg-[#FFF] flex sticky top-[-20px] tablet:top-[-60px] z-50 bg-white justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pb-5 pt-10 tablet:pt-[80px]">
             <BackButton to="/pages" color="white" />
             <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
               <span>Update Page</span> <Loading width={20} height={20} color="#FFFFFF" />

@@ -273,10 +273,10 @@ export const store = create<Store>(
       fetchSinglePage: async (title: string) => {
         set({ overlayLoading: true, error: null });
         try {
-          const response = await axios.get(`/page/name/${title}`, {
+          const response = await axios.get(`/page/${title}`, {
             headers: { Authorization: `Bearer ${get().token}` },
           });
-          const pageData = response.data?.data[0];
+          const pageData = response.data.data;
           set({ page: pageData }); // Add a specific `page` key
         } catch (error) {
           set({ error: handleError(error) });
