@@ -49,6 +49,7 @@ const SinglePitch = () => {
   setType(type)
   setSlug(currentPage)
 setEdit(edit)
+console.log(type)
 
     }, [pathname]);
 
@@ -61,14 +62,14 @@ setEdit(edit)
   useEffect(() => {
     if (SingleData) {
       setFormData({
-        name: SingleData?.data?.name || "",
-        description: SingleData?.data?.description || "",
-        title: SingleData?.data?.title || "",
+        name: SingleData?.page?.name || "",
+        description: SingleData?.page?.description || "",
+        title: SingleData?.page?.title || "",
       });
-      setId(SingleData?.data?._id || "")
+      setId(SingleData?.page?.id || "")
     }
 
-    console.log(SingleData)
+    console.log(SingleData?.page?.description)
   }, [SingleData]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -82,7 +83,7 @@ setEdit(edit)
   const handlePublish = async () => {
     try {
       setIsComponentLoading(true);
-     await axios.patch(`${type}/${id}`, formData, {
+     await axios.put(`${type}/update/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

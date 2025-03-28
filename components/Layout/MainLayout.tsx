@@ -12,7 +12,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   useEffect(() => {
-    const unprotectedRoutes = ['/login'];
+    const unprotectedRoutes = ['/login', '/signup'];
     setIsUnprotectedRoute(unprotectedRoutes.includes(pathname));
   }, [pathname]);
 

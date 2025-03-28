@@ -244,20 +244,20 @@ export const store = create<Store>(
       setSearch: (value) => (value !== "" ? set({ showSearch: true, searchInput: value }) : set({ showSearch: false, searchInput:"" })),
       fetchUsers: () => fetchData("/user", set, "users"),
       fetchComponents: () => fetchData("/components", set, "components"),
-      fetchIndustries: () => fetchData("/industry", set, "industries"),
-      fetchStacks: () => fetchData("/stack", set, "stacks"),
-      fetchTypes: () => fetchData("/type", set, "types"),
-      fetchStyles: () => fetchData("/style", set, "styles"),
+      fetchIndustries: () => fetchData("/industries", set, "industries"),
+      fetchStacks: () => fetchData("/stacks", set, "stacks"),
+      fetchTypes: () => fetchData("/types", set, "types"),
+      fetchStyles: () => fetchData("/styles", set, "styles"),
 
       fetchAllPages: async () => {
         // const token = () => get().token
         set({ overlayLoading: true });
         try {
           await axios
-            .get(`/page`)
+            .get(`/pages`)
             .then(function (response) {
-              set({ pages: response.data , overlayLoading: false });
-              // console.log(response.data)
+              set({ pages: response.data.subscribers , overlayLoading: false });
+              // console.log(response.data.subscribers)
             });
         } catch (error) {
           console.error("Error fetching Data:", error);

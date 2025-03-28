@@ -42,7 +42,12 @@ export default function AddCategory() {
   const handlePublish = async () => {
     try {
       setIsComponentLoading(true);
-      await axios.post(formData.category, formData, {
+      const payload = {
+        name: formData.name,
+        description: formData.description,
+        title: formData.title,
+      }
+      await axios.post(`${formData.category}/create`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

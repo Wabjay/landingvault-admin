@@ -45,7 +45,7 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('/auth/login', { email, password });
+      const response = await axios.post('auth/signup', { email, password });
       const token = response.data?.access_token;
 
       if (!token) {

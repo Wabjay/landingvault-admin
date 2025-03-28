@@ -25,7 +25,7 @@ const InfoCard = ({ info, pageName }) => {
       <div className="flex flex-col gap-6 tablet:flex-row justify-between">
         <Link href={{
           pathname: `category/${info.id}`,
-          query: { ref:pageName === "industries" ? "industry" : pageName === "components" ? pageName : pageName.slice(0, -1) , edit : false }, // Example query parameters
+          query: { ref:pageName === "components" ? pageName : pageName , edit : false }, // Example query parameters
         }}
          className="mt-6 text-white bg-green-600 w-[113px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90">
           View

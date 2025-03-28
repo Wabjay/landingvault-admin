@@ -63,7 +63,7 @@ export const handleDeleteCategory = async (
     okType: "danger",
     onOk: async () => {
       try {
-        await axios.delete(`/${name}/${id}`, {
+        await axios.delete(`/${name}/delete/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
