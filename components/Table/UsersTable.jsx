@@ -34,10 +34,10 @@ const Table = ({ columns, data, pageSize }) => {
       <table className="table-auto w-full laptop:max-w-[1152px] mx-auto px-4 tablet:px-6 laptop:px-8 xl:px-0 py-[40px] tablet:py-[80px] laptop:py-[100px]">
         <thead className="bg-[#F3F3F4]">
           <tr>
-            {columns.map((column) => (
+            {columns.map((column, index) => (
               <th
                 className="p-6 text-left whitespace-nowrap text-xs font-medium text-gray-500 uppercase tracking-wider"
-                key={column}
+                key={index}
               >
                 {column}
               </th>

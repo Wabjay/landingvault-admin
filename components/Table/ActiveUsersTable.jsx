@@ -33,10 +33,10 @@ const Table = ({ columns, data, pageSize }) => {
       <table className="table-auto w-full laptop:max-w-[1152px] mx-auto px-4 tablet:px-6 laptop:px-8 xl:px-0 py-[40px] tablet:py-[80px] laptop:py-[100px]">
         <thead className="bg-[#F3F3F4]">
           <tr>
-            {columns.map((column) => (
+            {columns.map((column, index) => (
               <th
                 className="p-6 text-left whitespace-nowrap text-xs font-medium text-gray-500 uppercase tracking-wider"
-                key={column}
+                key={index}
               >
                 {column}
               </th>
@@ -71,7 +71,7 @@ Previous
         </span> */}
 
         <span className="flex gap-4 items-center border border-[#D0D5DD] bg-white-1  px-4 shadow-table-button rounded-lg">
-         {pages.map(page =>  <span key={page} className={`hover:bg-[#D0D5DD] p-4 cursor-pointer ${currentPage === (page) && 'bg-[#D0D5DD]'}`} onClick={()=> setCurrentPage(page)} disabled={currentPage === 0}>{page + 1} </span>)}
+         {pages.map((page, index) =>  <span key={index} className={`hover:bg-[#D0D5DD] p-4 cursor-pointer ${currentPage === (page) && 'bg-[#D0D5DD]'}`} onClick={()=> setCurrentPage(page)} disabled={currentPage === 0}>{page + 1} </span>)}
         </span>
 
 
