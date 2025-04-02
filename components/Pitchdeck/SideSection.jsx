@@ -35,28 +35,32 @@ const SideSection = ({ page }) => {
         <p className="w-full grid grid-cols-5 text-14 gap-y-4 leading-6 font-semibold">
           <Skeleton>
             <span className="col-span-2">Industry</span>
-            <span className="col-span-2">{page?.industry?.name}</span>
+            {/* <span className="col-span-2">{page?.industry?.name}</span> */}
+            <span className="col-span-2">{page?.industry?.length ? page.industry.map(item => item.title).join(", ") : "N/A"}</span>
             {/* <span className="col-span-2">{page?.industry?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Component</span>
-            <span className="col-span-3">{page?.componentType?.name}</span>
+            {/* <span className="col-span-3">{page?.componentType?.name}</span> */}
+            <span className="col-span-2">{page?.componentType?.length ? page.componentType.map(item => item.title).join(", ") : "N/A"}</span>
             {/* <span className="col-span-3">{page?.componentType?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Stack</span>
-            <span className="col-span-2">{page?.stacks?.name}</span>
-            {/* <span className="col-span-2">{page?.stacks?.join(", ") || "N/A"}</span> */}
+            {/* <span className="col-span-2">{page?.stacks?.name}</span> */}
+            <span className="col-span-2">{page?.stack?.length ? page.stack.map(item => item.title).join(", ") : "N/A"}</span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Type</span>
-            <span className="col-span-2">{page?.type?.name}</span>
-            {/* <span className="col-span-2">{page?.type?.join(", ") || "N/A"}</span> */}
+            {/* <span className="col-span-2">{page?.type?.name}</span> */}
+            <span className="col-span-2">{page?.type?.length ? page.type.map(item => item.title).join(", ") : "N/A"}</span>
+
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Style</span>
-            <span className="col-span-2">{page?.style?.name}</span>
-            {/* <span className="col-span-2">{page?.style?.join(", ") || "N/A"}</span> */}
+            {/* <span className="col-span-2">{page?.style?.name}</span> */}
+            <span className="col-span-2">{page?.style?.length ? page.style.map(item => item.title).join(", ") : "N/A"}
+            </span>
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Mode</span>
@@ -107,7 +111,7 @@ const SideSection = ({ page }) => {
         <Skeleton>
           <Link
             href={{
-              pathname: `/pages/edit/${page?.componentType?.title}/${page?.brandName}`,
+              pathname: `/pages/edit/${page?.componentType[0]?.title}/${page?.brandName}`,
             }}
             passHref
             className="bg-[#21AB68] border-[#21AB68] shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"

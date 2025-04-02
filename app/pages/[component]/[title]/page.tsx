@@ -21,7 +21,7 @@ const SinglePage = () => {
       try {
         const component = pathname?.split("/")[2];
         const title = pathname?.split("/")[3];
-        console.log(component, title);
+        // console.log(component, title);
         if (component && title) {
           await fetchSinglePage(component, title);
         }

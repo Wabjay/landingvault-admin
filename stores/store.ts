@@ -269,9 +269,9 @@ export const store = create<Store>(
         try {
           set({ overlayLoading: true });
       
-          const queryParams = `${component ? component : "Landing page"}`;
-          // const queryParams = `search=${component ? component : "landing"}${page ? `&page=${page}` : ""}`;
-          const { data } = await axios.get(`/pages/${queryParams}`);
+          // const queryParams = `${component ? component : "Landing page"}`;
+          const queryParams = `search=${component ? component : "Landing page"}&page=${page ? page : "1"}`;
+          const { data } = await axios.get(`/pages?${queryParams}`);
       
           set({ sortedPages: data.pages });
           console.log(data);
@@ -298,8 +298,7 @@ export const store = create<Store>(
             headers: { Authorization: `Bearer ${get().token}` },
           });
           const pageData = response.data.page;
-          console.log(pageData[0]);
-          set({ page: pageData[0] });
+          set({ page: pageData });
         } catch (error) {
           set({ error: handleError(error) });
         } finally {

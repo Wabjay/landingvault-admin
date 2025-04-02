@@ -83,8 +83,11 @@ export default function UpdatePage() {
   useEffect(() => {
     if (pageData) {
       const page = pageData;
+      console.log(pageData)
       setFormData({
-        ...formData,
+        ...formData, 
+        componentType: pageData.componentType[0]?.title,
+        industry: pageData.industry[0]?.title,
         ...page,
       });
       const colors = page.colorPalette.join(", ") || "N/A"
@@ -130,7 +133,7 @@ export default function UpdatePage() {
   };
 
   const handlePublish = async () => {
-    const updatedTitle = formData.componentType[0]
+    const updatedTitle = formData.componentType
       .toLowerCase()
       .replace("page", "")
       .trim();

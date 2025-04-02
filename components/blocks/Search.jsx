@@ -21,10 +21,10 @@ export default function Search() {
     const wordsArray = searchInput.split(/\s+/);
     const sortPagesByTagOrSearch = () => {
       if (!searchInput) {
-        return pages.data;
+        return pages;
       }
 
-      return pages.data.filter((page) =>
+      return pages.filter((page) =>
         wordsArray.some(
           (word) =>
             page.brandName.toLowerCase().includes(word) ||
@@ -35,7 +35,7 @@ export default function Search() {
 
     // fetchSearchedPages(sortPagesByTagOrSearch());
     fetchPages(sortPagesByTagOrSearch());
-  }, [searchInput,  pages.data]);
+  }, [searchInput,  pages]);
 
   // Handle focus/typing state
   const handleFocus = () => {

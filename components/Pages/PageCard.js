@@ -88,7 +88,7 @@ const PageCard = ({ page }) => {
         />
         <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 p-2 mx-auto'>
         <div className='flex items-center gap-4 p-2 mx-auto'>
-          <Link href={{ pathname: `/pages/${page?.componentType.title}/${page?.brandName}` }}>
+          <Link href={{ pathname: `/pages/${page?.componentType[0].title}/${page?.brandName}` }}>
             <button className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-[#2E2E2F] font-bold hover:bg-slate-300">View</button>
           </Link>
           <Link href={{ pathname: `/pages/edit/${createSlug(page?._id)}` }}>
