@@ -3,7 +3,8 @@ import { Select } from "antd";
 import { store } from "@/stores/store";
 
 interface Tag {
-  _id: string;
+  _id: string;  
+  id: string;
   title: string;
   name: string;
   createdAt: string;
@@ -43,7 +44,7 @@ export function SelectIndustry({ value, initialValue }: SelectCategoryTypeProps)
 
   // Generate options based on industries data
   const options = metrics.industries.data.map((tag: Tag) => ({
-    value: tag.name,
+    value: tag.id,
     label: tag.name,
   }));
 

@@ -22,12 +22,20 @@ export default function Tags() {
 
   const sortTag = (tag: string) => {
     setActiveTag(tag);
+    console.log(tag)
+    const tags = tag
+    .toLowerCase()
+    .replace("page", "")
+    .trim();
+    fetchPages({ component: tag, page: "" });
+
+
   }
     
-    useEffect(()=>{
-      const filteredPages = pages?.data?.filter(page => page?.componentType[0] === activeTag);
-      fetchPages(filteredPages)
-    },[activeTag, pages])
+    // useEffect(()=>{
+    //   const filteredPages = pages?.data?.filter(page => page?.componentType[0] === activeTag);
+    //   fetchPages(filteredPages)
+    // },[activeTag, pages])
 
 const components = metrics.components.data
   useEffect(() => {

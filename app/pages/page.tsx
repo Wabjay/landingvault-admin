@@ -14,7 +14,7 @@ const Pages = () => {
 
   const {sortedPages:pagesData} = store()
 
-
+console.log(pagesData)
   return (
     <div className="w-full">
     <div className="bg-[#FFF]">
@@ -28,7 +28,6 @@ const Pages = () => {
 
           <p className='text-grey-800 text-40 font-bold mb-5 capitalize'>Pages</p>
           <Search />
-        
                       </div>
                       <div className="w-fit max-w-[1100px] ml-0 overflow-hidden no-scrollbar px-4 tablet:px-6 laptop:px-8 desktop:px-0">
                       <Tags />
@@ -39,7 +38,7 @@ const Pages = () => {
     <div>
 
         <div className="w-fit grid tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4 gap-4 gap-y-10 mt-10">
-      {pagesData && pagesData.map((item: Page, index: Key | null | undefined) => (
+      {pagesData.length >= 0 && pagesData?.map((item: Page, index: Key | null | undefined) => (
           <PageCard key={index} page={item} />
         ))}
         </div>

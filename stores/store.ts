@@ -115,7 +115,7 @@ const initialState: StoreState = {
   componentLoading: false,
   overlayLoading: false,
   token: "",
-  link: "/pitch-decks",
+  link: "/",
   metrics: {
     users: { data: [] },
     components: { data: [] },
@@ -182,13 +182,14 @@ interface Store extends StoreState {
   setIsLoggedin: (status: boolean) => void;
   setSearch: (show: string) => void;
   setIsLoading: (status: boolean) => void;
-  fetchPages: (pages: Page[]) => void;
+  fetchPages: (params: { component: string; page?: string }) => Promise<void>;
+  // fetchPages: (pages: Page[]) => void;
   setIsComponentLoading: (status: boolean) => void;
   setIsOverlayLoading: (status: boolean) => void;
   setTags: (tags: string[]) => void;
   setImages: (images: string[]) => void;
   fetchAllPages: () => void;
-  fetchSinglePage: (id: string) => void;
+  fetchSinglePage: (component: string, title: string ) => Promise<void>;
   fetchSingle: (id: string, type: string) => void;
   resetState: () => void;
   setError: (message: string) => void;  // Action to set error state
@@ -264,20 +265,41 @@ export const store = create<Store>(
           set({ overlayLoading: false }); // Corrected from `loading: false`
       }
       },
-      fetchPages: async (response: any) => {
-        set({ overlayLoading: true });
-        // console.log(response)
-        set({ sortedPages: response, overlayLoading: false  });
+      fetchPages: async ({ component, page }: { component?: string; page?: string }) => {
+        try {
+          set({ overlayLoading: true });
+      
+          const queryParams = `${component ? component : "Landing page"}`;
+          // const queryParams = `search=${component ? component : "landing"}${page ? `&page=${page}` : ""}`;
+          const { data } = await axios.get(`/pages/${queryParams}`);
+      
+          set({ sortedPages: data.pages });
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } finally {
+          set({ overlayLoading: false });
+        }
       },
+      
 
-      fetchSinglePage: async (title: string) => {
+      // fetchPages: async (response: any) => {
+      //   set({ overlayLoading: true });
+      //   // console.log(response)
+      //   set({ sortedPages: response, overlayLoading: false  });
+      // },
+
+      fetchSinglePage: async (component: string, title: string ) => {
+        console.log(component, title)
         set({ overlayLoading: true, error: null });
         try {
-          const response = await axios.get(`/page/${title}`, {
+          const url = component ? `/page/${component}/${title}` : `/page/${title}`;
+          const response = await axios.get(url, {
             headers: { Authorization: `Bearer ${get().token}` },
           });
-          const pageData = response.data.data;
-          set({ page: pageData }); // Add a specific `page` key
+          const pageData = response.data.page;
+          console.log(pageData[0]);
+          set({ page: pageData[0] });
         } catch (error) {
           set({ error: handleError(error) });
         } finally {

@@ -50,9 +50,10 @@ export default function UpdatePage() {
   const { navigateTo } = useNavigation();
 
   useEffect(() => {
-    const pageName = pathname.split("/")[3]?.toLowerCase();
+    const pageName = pathname.split("/")[4];
+    const component = pathname?.split("/")[3];
     if (pageName) {
-      fetchSinglePage(pageName);
+      fetchSinglePage(component, pageName);
     }
   }, []);
 
@@ -135,15 +136,15 @@ export default function UpdatePage() {
       .trim();
   
     // Remove extra spaces
-    let brandName = formData.brandName.replace(/\s+/g, " ").trim(); // Replaces multiple spaces with a single space
+    // let brandName = formData.brandName.replace(/\s+/g, " ").trim(); // Replaces multiple spaces with a single space
   
-    // Check if updatedTitle is already in brandName
-    if (!brandName.includes(updatedTitle)) {
-      updatedBrandName = brandName + " " + updatedTitle;
-      formData.brandName = updatedBrandName.replace(/\s+/g, " ").trim();
-    } else {
-      formData.brandName = brandName.replace(/\s+/g, " ").trim();
-    }
+    // // Check if updatedTitle is already in brandName
+    // if (!brandName.includes(updatedTitle)) {
+    //   updatedBrandName = brandName + " " + updatedTitle;
+    //   formData.brandName = updatedBrandName.replace(/\s+/g, " ").trim();
+    // } else {
+    //   formData.brandName = brandName.replace(/\s+/g, " ").trim();
+    // }
   
     const payload = {
       ...formData, // Use the correctly updated brandName

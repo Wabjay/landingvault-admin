@@ -35,23 +35,28 @@ const SideSection = ({ page }) => {
         <p className="w-full grid grid-cols-5 text-14 gap-y-4 leading-6 font-semibold">
           <Skeleton>
             <span className="col-span-2">Industry</span>
-            <span className="col-span-2">{page?.industry?.join(", ") || "N/A"}</span>
+            <span className="col-span-2">{page?.industry?.name}</span>
+            {/* <span className="col-span-2">{page?.industry?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Component</span>
-            <span className="col-span-3">{page?.componentType?.join(", ") || "N/A"}</span>
+            <span className="col-span-3">{page?.componentType?.name}</span>
+            {/* <span className="col-span-3">{page?.componentType?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Stack</span>
-            <span className="col-span-2">{page?.stacks?.join(", ") || "N/A"}</span>
+            <span className="col-span-2">{page?.stacks?.name}</span>
+            {/* <span className="col-span-2">{page?.stacks?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Type</span>
-            <span className="col-span-2">{page?.type?.join(", ") || "N/A"}</span>
+            <span className="col-span-2">{page?.type?.name}</span>
+            {/* <span className="col-span-2">{page?.type?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Style</span>
-            <span className="col-span-2">{page?.style?.join(", ") || "N/A"}</span>
+            <span className="col-span-2">{page?.style?.name}</span>
+            {/* <span className="col-span-2">{page?.style?.join(", ") || "N/A"}</span> */}
           </Skeleton>
           <Skeleton>
             <span className="col-span-2">Mode</span>
@@ -70,14 +75,14 @@ const SideSection = ({ page }) => {
                 <span
                   key={`${color}-${index}`}
                   className="relative group ml-[-18px] w-6 h-6 rounded-full inline-block mr-2"
-                  style={{ backgroundColor: `#${color}` }}
+                  style={{ backgroundColor: `${color}` }}
                 >
                   {/* Tooltip */}
                   <span
-                    style={{ backgroundColor: `#${color}` }}
+                    style={{ backgroundColor: `${color}` }}
                     className="uppercase absolute left-1/2 transform -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   >
-                    #{color}
+                    {color}
                   </span>
                 </span>
               )) || "N/A"}
@@ -102,7 +107,7 @@ const SideSection = ({ page }) => {
         <Skeleton>
           <Link
             href={{
-              pathname: `/pages/edit/${createSlug(page?.brandName)}`,
+              pathname: `/pages/edit/${page?.componentType?.title}/${page?.brandName}`,
             }}
             passHref
             className="bg-[#21AB68] border-[#21AB68] shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"

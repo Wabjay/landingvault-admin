@@ -1,5 +1,5 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState } from "react";
 import { Button, Input, message } from "antd";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
@@ -11,29 +11,13 @@ import { SelectMode } from "@/components/selections/SelectMode";
 import TextArea from "antd/es/input/TextArea";
 import { SelectStyle } from "@/components/selections/SelectStyle";
 import { SelectType } from "@/components/selections/SelectType";
-import ImageCover from "@/lib/UploadCover";
-import MainImage from "@/lib/UploadMainImage";
 import Loading from "@/components/blocks/LoadingComponent";
 import BackButton from "@/components/blocks/BackButton";
 import { createSlug } from "@/components/blocks/slug";
 import { Notification } from "@/components/blocks/Notification";
 import { useNavigation } from "@/components/utils/navigations";
-
-// Define types for form data
-// interface FormData {
-//   pageImage: string;
-//   pageCoverImage: string;
-//   brandName: string;
-//   brandDescription: string;
-//   websiteUrl: string;
-//   componentType: string[];
-//   industry: string[];
-//   stacks: string[];
-//   style: string[];
-//   type: string[];
-//   mode: string;
-//   colorPalette: string[];
-// }
+import { Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 export default function AddPage() {
   const { token, setIsComponentLoading, fetchAllPages } = store();
@@ -41,10 +25,9 @@ export default function AddPage() {
   const { navigateTo } = useNavigation();
 
   const [color, setColor] = useState("");
-
   const [formData, setFormData] = useState({
-    pageImage: "",
-    pageCoverImage: "",
+    pageImage: null,
+    pageCoverImage: null,
     brandName: "",
     brandDescription: "",
     websiteUrl: "",
@@ -54,97 +37,101 @@ export default function AddPage() {
     style: [],
     type: [],
     mode: "light",
-    colorPalette: [],
+    colorPalette: "",
   });
 
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
 
-  // Handle change for input fields
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "colorPalette") {
-      const newValue = value.split(",");
-      setFormData((prevFormData) => ({
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  // Modified image upload handler with better logging
+  const handleImageUpload = (type) => ({ file }) => {
+    if (file) {
+      console.log(`Uploading ${type} image:`, file.name, file.size, file.type);
+      setFormData(prevFormData => ({
         ...prevFormData,
-        [name]: newValue.map((color) => color.trim()),
+        [type === 'cover' ? 'pageCoverImage' : 'pageImage']: file
       }));
-      setColor(value);
     } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
+      console.log(`No file selected for ${type} image`);
     }
   };
 
-  // Handle image upload
-  const getImage = (res) => {
-    setFormData({ ...formData, pageCoverImage: res,  pageImage: res  });
-  };
-
-  // const getMainImage = (res: string) => {
-  //   setFormData({ ...formData, pageImage: res });
-  // };
-
-  // Handle update for form data from select components
   const handleFormDataUpdate = (res) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
   const handlePublish = async () => {
-
     const updatedTitle = formData.componentType[0]
-    .toLowerCase()
-    .replace("page", "")
-    .trim();
+      .toLowerCase()
+      .replace("page", "")
+      .trim();
 
-    let brandName = formData.brandName.replace(/\s+/g, " ").trim(); // Replaces multiple spaces with a single space
-  
-    // Check if updatedTitle is already in brandName
-    if (!brandName.includes(updatedTitle)) {
-      updatedBrandName = brandName + " " + updatedTitle;
-      formData.brandName = updatedBrandName.replace(/\s+/g, " ").trim();
-    } else {
-      formData.brandName = brandName.replace(/\s+/g, " ").trim();
-    }
-    // Creating the payload with the updated brandName
-    const payload = {
-      ...formData,
-    };
+    let brandName = formData.brandName.replace(/\s+/g, " ").trim();
 
-    // Validate the website URL
+    // const payload = new FormData();
+    
+    // if (formData.pageCoverImage) {
+    //   console.log('Appending cover image:', formData.pageCoverImage.name);
+    //   payload.append('pageCoverImage', formData.pageCoverImage);
+    // }
+    // if (formData.pageImage) {
+    //   console.log('Appending main image:', formData.pageImage.name);
+    //   payload.append('pageImage', formData.pageImage);
+    // }
+    // payload.append('brandName', formData.brandName);
+    // payload.append('brandDescription', formData.brandDescription);
+    // payload.append('websiteUrl', formData.websiteUrl);
+    // payload.append('componentType', formData.componentType);
+    // payload.append('industry', formData.industry);
+    // payload.append('stacks', formData.stacks);
+    // payload.append('style', formData.style);
+    // payload.append('type', formData.type);
+    // payload.append('mode', formData.mode);
+    // payload.append('colorPalette', formData.colorPalette);
+
+    // Log the payload contents
+    // console.log('FormData contents:');
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
+
     if (!urlPattern.test(formData.websiteUrl)) {
       Notification("Please enter a valid website URL");
       return;
     }
 
-    // Validate required fields
     if (!formData.brandName || !formData.brandDescription) {
       Notification("Brand Name and Description are required");
       return;
     }
 
     try {
-      setIsComponentLoading(true); // Show loading state
-// console.log(payload)
-      // Make API call to create the page
-      const response = await axios.post("/page", payload, {
+      setIsComponentLoading(true);
+    //   console.log('Appending cover image:', formData.pageCoverImage.name);
+
+      const response = await axios.post("/page/create", formData, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
-          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Credentials": "true",
         },
       });
 
-      // Extract the created page slug or ID from the response
-      const { data } = response;
-      // const newPageSlug = createSlug(payload.brandName);
-      const newPageSlug = data.slug || createSlug(payload.brandName);
+      console.log('Upload response:', response.data.page);
 
-      // Reset form on success
+      const { data } = response;
+      const newPageSlug = data.page.id || createSlug(payload.get('brandName'));
+
       setFormData({
-        pageImage: "",
-        pageCoverImage: "",
+        pageImage: null,
+        pageCoverImage: null,
         brandName: "",
         brandDescription: "",
         websiteUrl: "",
@@ -154,20 +141,17 @@ export default function AddPage() {
         style: [],
         type: [],
         mode: "light",
-        colorPalette: [],
+        colorPalette: "",
       });
 
-      Notification("Page Uploaded Successfully"); // Show success message
-      fetchAllPages(); // Refresh page list
-
-      // Navigate to the newly created page
+      Notification("Page Uploaded Successfully");
+      fetchAllPages();
       navigateTo(`/pages/${newPageSlug}`);
     } catch (error) {
-      // Handle errors gracefully
-      Notification("Error Uploading Page");
-      console.error("Error uploading Page:", error);
+      console.error("Upload error:", error.response?.data || error.message);
+      Notification(`Error Uploading Page: ${error.message}`);
     } finally {
-      setIsComponentLoading(false); // Hide loading state
+      setIsComponentLoading(false);
     }
   };
 
@@ -175,7 +159,7 @@ export default function AddPage() {
     <div className="w-full">
       <div className="bg-[#FFF]">
         <div className="w-full laptop:max-w-[900px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
-        <div className="w-full flex sticky top-[-20px] tablet:top-[-60px] z-50 bg-white justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pb-5 pt-10 tablet:pt-[80px]">
+          <div className="w-full flex sticky top-[-20px] tablet:top-[-60px] z-50 bg-white justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pb-5 pt-10 tablet:pt-[80px]">
             <BackButton to="/pages" color="white" />
             <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
               <span>Update Page</span> <Loading width={20} height={20} color="#FFFFFF" />
@@ -186,12 +170,35 @@ export default function AddPage() {
           </p>
 
           <div className="w-full px-4 tablet:px-6 laptop:px-0 flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
+            {/* Modified Cover Image Upload */}
             <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
-              <ImageCover
-                coverImage={getImage}
-                coverPath="coverImages"
-                uploaded={formData.pageCoverImage}
-              />
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={(file) => {
+                  console.log('Before upload check:', file);
+                  return true;
+                }}
+                customRequest={({ file, onSuccess, onError }) => {
+                  try {
+                    handleImageUpload('cover')({ file });
+                    setTimeout(() => onSuccess("ok"), 0); // Simulate async upload
+                  } catch (err) {
+                    console.error('Upload error:', err);
+                    onError(err);
+                  }
+                }}
+              >
+                {formData.pageCoverImage ? (
+                  <img 
+                    src={URL.createObjectURL(formData.pageCoverImage)} 
+                    alt="Cover preview" 
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <Button icon={<UploadOutlined />}>Upload Cover Image</Button>
+                )}
+              </Upload>
             </div>
 
             <InputField
@@ -256,11 +263,10 @@ export default function AddPage() {
               name="colorPalette"
               label="Enter Colors"
               placeholder="colors..."
-              value={color}
+              value={formData.colorPalette }
               onChange={handleChange}
             />
 
-            {/* <InputField type="number" name="updatedAt" label="Date" placeholder="10" value={formData.updatedAt} onChange={handleChange} /> */}
             <InputField
               type="string"
               name="websiteUrl"
@@ -274,13 +280,38 @@ export default function AddPage() {
                 Please enter a valid website URL
               </p>
             )}
-            {/* <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
-              <MainImage
-                coverImage={getMainImage}
-                coverPath="coverImages"
-                uploaded={formData.pageImage}
-              />
-            </div> */}
+            
+            {/* Modified Main Image Upload */}
+            <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={(file) => {
+                  console.log('Before upload check:', file);
+                  return true;
+                }}
+                customRequest={({ file, onSuccess, onError }) => {
+                  try {
+                    handleImageUpload('main')({ file });
+                    setTimeout(() => onSuccess("ok"), 0); // Simulate async upload
+                  } catch (err) {
+                    console.error('Upload error:', err);
+                    onError(err);
+                  }
+                }}
+              >
+                {formData.pageImage ? (
+                  <img 
+                    src={URL.createObjectURL(formData.pageImage)} 
+                    alt="Main preview" 
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <Button icon={<UploadOutlined />}>Upload Main Image</Button>
+                )}
+              </Upload>
+            </div>
+            
             <Button
               onClick={handlePublish}
               className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer"
@@ -295,7 +326,7 @@ export default function AddPage() {
   );
 }
 
-// Input Field Component with TypeScript
+// Input Field Component
 const InputField = ({
   name,
   label,
@@ -317,7 +348,7 @@ const InputField = ({
   </div>
 );
 
-// Text Area Component with TypeScript
+// Text Area Component
 const TextAreaField = ({
   name,
   label,
@@ -339,7 +370,7 @@ const TextAreaField = ({
   </div>
 );
 
-// Select Field Component with TypeScript
+// Select Field Component
 const SelectField = ({
   name,
   label,

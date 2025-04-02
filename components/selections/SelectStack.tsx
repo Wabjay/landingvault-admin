@@ -5,6 +5,7 @@ import { store } from "@/stores/store";
 
 interface Tag {
   _id: string;
+  id: string;
   title: string;
   name: string;
   createdAt: string;
@@ -44,7 +45,7 @@ export function SelectStack({ value, initialValue }: SelectCategoryTypeProps) {
 
   // Generate options based on stacks data
   const options = metrics.stacks.data.map((tag: Tag) => ({
-    value: tag.name,
+    value: tag.id,
     label: tag.name,
   }));
 

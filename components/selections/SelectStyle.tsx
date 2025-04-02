@@ -4,6 +4,7 @@ import { store } from "@/stores/store";
 
 interface Tag {
   _id: string;
+  id: string;
   title: string;
   name: string;
   createdAt: string;
@@ -43,7 +44,7 @@ export function SelectStyle({ value, initialValue }: SelectCategoryTypeProps) {
 
   // Generate options based on styles data
   const options = metrics.styles.data.map((tag: Tag) => ({
-    value: tag.name,
+    value: tag.id,
     label: tag.name,
   }));
 
