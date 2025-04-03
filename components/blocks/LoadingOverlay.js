@@ -11,7 +11,7 @@ export const LoadingOverlay = () => {
 
   return (
     overlayLoading ?
-        <div className="flex flex-col justify-center items-center bg-modalBlur absolute min-h-[100px] top-0 left-0 z-[350] w-full h-full">
+        <div className="flex flex-col justify-center items-center bg-overlay absolute min-h-[100px] top-0 left-0 z-[350] w-full h-full">
         <Oval
           height={56}
           width={56}

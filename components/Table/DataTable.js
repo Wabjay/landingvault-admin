@@ -47,10 +47,10 @@ const closePop = (res) => {
       <table className="table-auto w-full laptop:max-w-[1152px] mx-auto px-4 tablet:px-6 laptop:px-8 xl:px-0 py-[40px] tablet:py-[80px] laptop:py-[100px]">
         <thead className="bg-white border-b-[0.5px] border-b-[#EAECF0]">
           <tr>
-            {columns.map((column) => (
+            {columns.length > 0 && columns.map((column, index) => (
               <th
+              key={index}
                 className="p-6 text-left whitespace-nowrap text-xs font-medium text-gray-500 uppercase tracking-wider"
-                key={column}
               >
                 {column}
               </th>
@@ -60,8 +60,8 @@ const closePop = (res) => {
         <tbody className="bg-white-1">
           {currentPageData.map((cell, index) => (
             <tr
+            key={index}
               className="border-b border-b-[#EAECF0] hover:bg-[#EDEDEB]"
-              key={index}
             >
               <td className="p-6 whitespace-nowrap lowercase">{moment(cell?.date).format('MMM DD YYYY')}</td>
                 <td className="p-6 whitespace-nowrap capitalize">{cell?.email}</td>
@@ -88,7 +88,7 @@ Previous
         </span> */}
 
         <span className="flex gap-4 items-center border border-[#D0D5DD] bg-white-1  px-4 shadow-table-button rounded-lg">
-         {pages.map(page =>  <span className={`hover:bg-[#D0D5DD] p-4 cursor-pointer ${currentPage === (page) && 'bg-[#D0D5DD]'}`} onClick={()=> setCurrentPage(page)} disabled={currentPage === 0}>{page + 1} </span>)}
+         {pages.map((page, index) =>  <span key={index} className={`hover:bg-[#D0D5DD] p-4 cursor-pointer ${currentPage === (page) && 'bg-[#D0D5DD]'}`} onClick={()=> setCurrentPage(page)} disabled={currentPage === 0}>{page + 1} </span>)}
         </span>
 
 

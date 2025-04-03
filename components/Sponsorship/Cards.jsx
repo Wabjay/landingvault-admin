@@ -10,7 +10,7 @@ const Cards = () => {
   const { data, fetchData, token } = store();
 
   useEffect(()=>{
-fetchData(token)
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 

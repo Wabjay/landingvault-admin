@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(()=>{
 fetchUsers(token)
-fetchComponents(token)
+fetchComponents()
 fetchTypes(token)
 fetchStacks(token)
 fetchStyles(token)

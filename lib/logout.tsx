@@ -26,3 +26,20 @@ export const handleLogout = ( ) => {
         logOut
     }
   };
+
+
+
+  export const autoLogout = ( ) => {
+    const { setToken } = store();
+
+    const logOut =(navigateTo: (path: string) => void)=>{
+      setTimeout(() => {  
+      setToken('');
+        navigateTo('/'); 
+      }, 2 * 60 * 60 * 1000)
+    }
+
+    return {
+        logOut
+    }
+  };
