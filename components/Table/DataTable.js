@@ -49,8 +49,8 @@ const closePop = (res) => {
           <tr>
             {columns.length > 0 && columns.map((column, index) => (
               <th
+              key={index}
                 className="p-6 text-left whitespace-nowrap text-xs font-medium text-gray-500 uppercase tracking-wider"
-                key={index}
               >
                 {column}
               </th>
@@ -60,8 +60,8 @@ const closePop = (res) => {
         <tbody className="bg-white-1">
           {currentPageData.map((cell, index) => (
             <tr
+            key={index}
               className="border-b border-b-[#EAECF0] hover:bg-[#EDEDEB]"
-              key={index}
             >
               <td className="p-6 whitespace-nowrap lowercase">{moment(cell?.date).format('MMM DD YYYY')}</td>
                 <td className="p-6 whitespace-nowrap capitalize">{cell?.email}</td>
