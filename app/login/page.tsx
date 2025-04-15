@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
             type="email"
             id="email"
             placeholder="Enter your email address"
-            className={`bg-white border h-12 px-4 ${error ? 'border-red-500' : 'border-gray-400'}`}
+            className={`bg-white border h-12 px-4 dark:text-black ${error ? 'border-red-500' : 'border-gray-400'}`}
             value={email}
             onChange={(e) => setEmail(e.target.value.toLowerCase())}
             aria-invalid={!!error}
@@ -108,7 +108,7 @@ const LoginPage: React.FC = () => {
               type={isPasswordVisible ? 'text' : 'password'}
               id="password"
               placeholder="Enter your password"
-              className={`bg-white mb-2 border h-12 px-4 w-full ${error ? 'border-red-500' : 'border-gray-400'}`}
+              className={`bg-white dark:text-black mb-2 border h-12 px-4 w-full ${error ? 'border-red-500' : 'border-gray-400'}`}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               aria-invalid={!!error}

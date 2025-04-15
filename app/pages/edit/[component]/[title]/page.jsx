@@ -59,6 +59,7 @@ export default function UpdatePage() {
 
   const [error, setError] = useState("")
   const [color, setColor] = useState("")
+  const [font, setFont] = useState("")
 
     const [formData, setFormData] = useState({
     _id: "",
@@ -74,28 +75,37 @@ export default function UpdatePage() {
     type: [],
     mode: "", // Default mode
     colorPalette: [],
+    font: [],
     createdAt: "",
     updatedAt: "",
     __v: 0,
     id: "",
   });
-
   useEffect(() => {
     if (pageData) {
-      const page = pageData;
-      console.log(pageData)
+      const mapToObjects = (arr = []) =>
+        arr.map((item) => item);
+  
+      const colors = pageData.colorPalette?.join(", ") || "N/A";
+      const fonts = pageData.font?.join(", ") || "N/A";
       setFormData({
-        ...formData, 
-        componentType: pageData.componentType[0]?.title,
-        industry: pageData.industry[0]?.title,
-        ...page,
+        ...pageData,
+        componentType: mapToObjects(pageData.componentType),
+        industry: mapToObjects(pageData.industry),
+        stacks: mapToObjects(pageData.stacks),
+        style: mapToObjects(pageData.style),
+        type: mapToObjects(pageData.type),
+        colorPalette: pageData.colorPalette || [],
+        font: pageData.font || [],
       });
-      const colors = page.colorPalette.join(", ") || "N/A"
-      setColor(colors)
+  
+      setColor(colors);
+      setFont(fonts);
     }
   }, [pageData]);
+  
 
-
+  
   
        // URL validation for websiteUrl field
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
@@ -110,6 +120,13 @@ export default function UpdatePage() {
         });
         setColor(value)
     }
+    else if(name === "font"){
+      const newValue = value.split(",")
+       setFormData({
+        ...formData, [name]: newValue.map(font => font.trim()),
+        });
+        setFont(value)
+    }
   else{
     setFormData({ ...formData, [name]: value });
   }
@@ -123,47 +140,28 @@ export default function UpdatePage() {
   const getImage = (res) => {
     setFormData({ ...formData, pageCoverImage: res,  pageImage: res  });
   };
-
-  // const getMainImage = (res: string) => {
-  //   setFormData({ ...formData, pageImage: res });
-  // };
-
   const handleFormDataUpdate = (res) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
   const handlePublish = async () => {
-    const updatedTitle = formData.componentType
-      .toLowerCase()
-      .replace("page", "")
-      .trim();
-  
-    // Remove extra spaces
-    // let brandName = formData.brandName.replace(/\s+/g, " ").trim(); // Replaces multiple spaces with a single space
-  
-    // // Check if updatedTitle is already in brandName
-    // if (!brandName.includes(updatedTitle)) {
-    //   updatedBrandName = brandName + " " + updatedTitle;
-    //   formData.brandName = updatedBrandName.replace(/\s+/g, " ").trim();
-    // } else {
-    //   formData.brandName = brandName.replace(/\s+/g, " ").trim();
-    // }
-  
     const payload = {
       ...formData, // Use the correctly updated brandName
     };
   
-    console.log("brandName: ", formData.brandName);
+    console.log("Edit Payload form ", payload)
   
     if (!urlPattern.test(formData.websiteUrl)) {
       Notification("Please enter a valid website URL");
     } else {
       try {
         setIsComponentLoading(true);
-        await axios.patch(`/page/${pageData?._id}`, payload, {
+        await axios.patch(`/page/update/${pageData?.id}`, payload, {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
+            "Access-Control-Allow-Credentials": "true",
+
           },
         });
   
@@ -181,15 +179,15 @@ export default function UpdatePage() {
           type: [],
           mode: "",
           colorPalette: [],
+          font: [],
           createdAt: "",
           updatedAt: "",
           __v: 0,
           id: "",
         });
   
-        fetchSinglePage(createSlug(payload.brandName));
         Notification("Page Updated Successfully");
-        navigateTo(`/pages/${payload._id}`);
+        navigateTo(`/pages`);
       } catch (error) {
         Notification("Error Updating Page");
         console.error("Error updating page:", error);
@@ -223,13 +221,14 @@ export default function UpdatePage() {
 
             <TextAreaField name="brandDescription" label="About" placeholder="Describe Pitch deck" value={formData.brandDescription} onChange={handleTextChange} />
 
-            <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType} onChange={handleFormDataUpdate} />
+            <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType}  onChange={handleFormDataUpdate} />
             <SelectField name="industry" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
-            <SelectField name="stacks" label="Stack" component={SelectStack} value={formData.stacks} onChange={handleFormDataUpdate} />
+            <SelectField name="stacks" label="Stack" component={SelectStack} value={formData?.stacks} onChange={handleFormDataUpdate} />
             <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
             <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
             <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
             <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
+            <InputField name="font" label="Enter Fonts" placeholder="fonts..." value={font} onChange={handleChange} />
 
             <InputField name="websiteUrl" label="Website Link" placeholder="www.teslim.com" value={formData.websiteUrl} onChange={handleChange} />
               {(!urlPattern.test(formData.websiteUrl))  && <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">Please enter a valid website URL</p>}
@@ -243,15 +242,6 @@ export default function UpdatePage() {
     </div>
   );
 }
-
-// interface InputFieldProps {
-//   name: string;
-//   label: string;
-//   placeholder: string;
-//   value: string | number;
-//   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-//   type?: string;
-// }
 
 const InputField = ({ name, label, placeholder, value, onChange, type = "text" }) => (
   <div className="w-full flex flex-col gap-3">
@@ -268,13 +258,6 @@ const InputField = ({ name, label, placeholder, value, onChange, type = "text" }
   </div>
 );
 
-// interface TextAreaFieldProps {
-//   name: string;
-//   label: string;
-//   placeholder: string;
-//   value: string;
-//   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-// }
 
 const TextAreaField = ({ name, label, placeholder, value, onChange }) => (
   <div className="w-full flex flex-col gap-3">
@@ -291,19 +274,11 @@ const TextAreaField = ({ name, label, placeholder, value, onChange }) => (
   </div>
 );
 
-// interface SelectFieldProps {
-//   name: string;
-//   label: string;
-//   component: React.ComponentType<{ value: (res: { name: string; value: string[] }) => void; initialValue: string[] | string }>;
-//   value: string[] | string;
-//   onChange: (res: { name: string; value: string[] | string }) => void;
-// }
-
 const SelectField = ({ name, label, component: Component, value, onChange }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
     <Component
-      value={(res) => onChange({ name, value: res.value })}
+      onChange={(res) => onChange({ name, value: res.value })}
       initialValue={value}
     />
   </div>

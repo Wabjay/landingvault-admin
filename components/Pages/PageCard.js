@@ -38,24 +38,24 @@ const PageCard = ({ page }) => {
       brandName: page.brandName + updatedTitle,
       brandDescription: page.brandDescription,
       websiteUrl: page.websiteUrl,
-      componentType: page.componentType,
-      industry: page.industry,
-      stacks: page.stacks,
-      style: page.style,
-      type: page.type,
+      componentType: [{id: page.componentType[0]?.id}],
+      industry: [{id: page.industry[0]?.id}],
+      stacks: [{id: page.stacks[0]?.id}],
+      style: [{id: page.style[0]?.id}],
+      type: [{id: page.type[0]?.id}],
       mode: page.mode,
-      colorPalette: page.colorPalette,
+      colorPalette: page.colorPalette.join(', '),
     };
-      console.log("payload ", payload)
+      console.log("payload ", page)
     try {
       setIsOverlayLoading(true); // Show loading state
 
       // Make API call to create the page
-      await axios.post("/page", payload, {
+      await axios.post("/page/create", payload, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
-          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Credentials": "true",
         },
       });
 
@@ -91,7 +91,7 @@ const PageCard = ({ page }) => {
           <Link href={{ pathname: `/pages/${page?.componentType[0].title}/${page?.brandName}` }}>
             <button className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-[#2E2E2F] font-bold hover:bg-slate-300">View</button>
           </Link>
-          <Link href={{ pathname: `/pages/edit/${createSlug(page?._id)}` }}>
+          <Link href={{ pathname: `/pages/edit/${page?.componentType[0].title}/${page?.brandName}` }}>
             <button className="border border-[#A9EFCD] bg-[#A9EFCD] py-1 px-3 rounded-lg text-sm text-[#2E2E2F] font-bold hover:bg-slate-300">Edit</button>
           </Link>
           <button onClick={() => onDeletePage(page)} className="border border-[#FF6464] bg-[#FF6464] py-1 px-3 rounded-lg text-sm text-white font-medium hover:bg-slate-300">Delete</button>

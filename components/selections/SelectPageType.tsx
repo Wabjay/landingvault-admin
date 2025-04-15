@@ -13,42 +13,59 @@ interface Tag {
   __v: number;
 }
 
+interface IdValue {
+  id: string;
+}
+
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[] | string;
+  value: (data: { name: string; value: IdValue[] }) => void;
+  initialValue: IdValue[] | IdValue;
 }
 export function SelectPageType({ value, initialValue }: SelectCategoryTypeProps) {
-  const { metrics, fetchTypes, token } = store((state) => ({
+  const { metrics, fetchTypes } = store((state) => ({
     metrics: state.metrics,
     fetchTypes: state.fetchTypes,
-    token: state.token,
   }));
+
+    const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
+  
 
   useEffect(() => {
     // Fetch types if they are not already in the state
     if (!metrics.types.data.length) {
-      fetchTypes(token);
+      fetchTypes();
     }
-  }, [metrics.types.data, fetchTypes, token]);
+  }, [metrics.types.data, fetchTypes]);
 
   const handleChange = (selected: string[]) => {
+    setSelectedValue(selected); // Update local state
     value({
       name: "pageType",
-      value: selected,
+      value: selected.map((id) => ({ id })),
     });
   };
 
   // Generate options based on types data
   const options = metrics.types.data.map((tag: Tag) => ({
     value: tag.id,
-    label: tag.name,
+    label: tag.title,
   }));
+
+      useEffect(() => {
+        if (initialValue) {
+          const ids = Array.isArray(initialValue)
+            ? initialValue.map((item) => item.id)
+            : [initialValue.id];
+          setSelectedValue(ids);
+        }
+      }, [initialValue]);
+  
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
       placeholder="Select Page Type"
       onChange={handleChange}
       options={options}

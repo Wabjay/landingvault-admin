@@ -9,10 +9,10 @@ export default function Home() {
   useEffect(()=>{
 fetchUsers(token)
 fetchComponents()
-fetchTypes(token)
-fetchStacks(token)
-fetchStyles(token)
-fetchIndustries(token)
+fetchTypes()
+fetchStacks()
+fetchStyles()
+fetchIndustries()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token])
   return (

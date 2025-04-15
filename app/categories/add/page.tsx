@@ -64,10 +64,10 @@ export default function AddCategory() {
       });
         fetchUsers(token)
         fetchComponents()
-        fetchTypes(token)
-        fetchStacks(token)
-        fetchStyles(token)
-        fetchIndustries(token)
+        fetchTypes()
+        fetchStacks()
+        fetchStyles()
+        fetchIndustries()
 
         router.push(`/categories`);
 

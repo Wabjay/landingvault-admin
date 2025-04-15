@@ -172,10 +172,10 @@ const initialState: StoreState = {
 interface Store extends StoreState {
   fetchUsers: (token: string) => void;
   fetchComponents: () => void;
-  fetchIndustries: (token: string) => void;
-  fetchStacks: (token: string) => void;
-  fetchTypes: (token: string) => void;
-  fetchStyles: (token: string) => void;
+  fetchIndustries: () => void;
+  fetchStacks: () => void;
+  fetchTypes: () => void;
+  fetchStyles: () => void;
   setToken: (token: string) => void;
   setShowLogin: (show: boolean) => void;
   setShowData: (show: boolean) => void;
@@ -274,7 +274,7 @@ export const store = create<Store>(
           const { data } = await axios.get(`/pages?${queryParams}`);
       
           set({ sortedPages: data.pages });
-          console.log(data);
+          // console.log(data);
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {

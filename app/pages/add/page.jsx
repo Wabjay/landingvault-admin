@@ -38,6 +38,7 @@ export default function AddPage() {
     type: [],
     mode: "light",
     colorPalette: "",
+    font: "",
   });
 
   const urlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,6}(\/[\w\-]*)*$/i;
@@ -51,57 +52,30 @@ export default function AddPage() {
   };
 
   // Modified image upload handler with better logging
-  const handleImageUpload = (type) => ({ file }) => {
-    if (file) {
-      console.log(`Uploading ${type} image:`, file.name, file.size, file.type);
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        [type === 'cover' ? 'pageCoverImage' : 'pageImage']: file
-      }));
-    } else {
-      console.log(`No file selected for ${type} image`);
-    }
-  };
+  const handleImageUpload =
+    (type) =>
+    ({ file }) => {
+      if (file) {
+        // console.log(
+        //   `Uploading ${type} image:`,
+        //   file.name,
+        //   file.size,
+        //   file.type
+        // );
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [type === "cover" ? "pageCoverImage" : "pageImage"]: file,
+        }));
+      } else {
+      }
+    };
 
   const handleFormDataUpdate = (res) => {
     setFormData({ ...formData, [res.name]: res.value });
   };
 
   const handlePublish = async () => {
-    const updatedTitle = formData.componentType[0]
-      .toLowerCase()
-      .replace("page", "")
-      .trim();
-
-    let brandName = formData.brandName.replace(/\s+/g, " ").trim();
-
-    // const payload = new FormData();
-    
-    // if (formData.pageCoverImage) {
-    //   console.log('Appending cover image:', formData.pageCoverImage.name);
-    //   payload.append('pageCoverImage', formData.pageCoverImage);
-    // }
-    // if (formData.pageImage) {
-    //   console.log('Appending main image:', formData.pageImage.name);
-    //   payload.append('pageImage', formData.pageImage);
-    // }
-    // payload.append('brandName', formData.brandName);
-    // payload.append('brandDescription', formData.brandDescription);
-    // payload.append('websiteUrl', formData.websiteUrl);
-    // payload.append('componentType', formData.componentType);
-    // payload.append('industry', formData.industry);
-    // payload.append('stacks', formData.stacks);
-    // payload.append('style', formData.style);
-    // payload.append('type', formData.type);
-    // payload.append('mode', formData.mode);
-    // payload.append('colorPalette', formData.colorPalette);
-
-    // Log the payload contents
-    // console.log('FormData contents:');
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}:`, value);
-    // }
-
+   console.log("Add Payload form ", formData)
     if (!urlPattern.test(formData.websiteUrl)) {
       Notification("Please enter a valid website URL");
       return;
@@ -114,8 +88,6 @@ export default function AddPage() {
 
     try {
       setIsComponentLoading(true);
-    //   console.log('Appending cover image:', formData.pageCoverImage.name);
-
       const response = await axios.post("/page/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -124,10 +96,10 @@ export default function AddPage() {
         },
       });
 
-      console.log('Upload response:', response.data.page);
+      console.log("Upload response:", response.data.page);
 
       const { data } = response;
-      const newPageSlug = data.page.id || createSlug(payload.get('brandName'));
+      const newPageSlug = data.page.id || createSlug(payload.get("brandName"));
 
       setFormData({
         pageImage: null,
@@ -142,6 +114,7 @@ export default function AddPage() {
         type: [],
         mode: "light",
         colorPalette: "",
+        font: "",
       });
 
       Notification("Page Uploaded Successfully");
@@ -161,8 +134,12 @@ export default function AddPage() {
         <div className="w-full laptop:max-w-[900px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
           <div className="w-full flex sticky top-[-20px] tablet:top-[-60px] z-50 bg-white justify-between items-start mx-auto px-4 tablet:px-6 laptop:px-0 pb-5 pt-10 tablet:pt-[80px]">
             <BackButton to="/pages" color="white" />
-            <Button onClick={handlePublish} className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer">
-              <span>Update Page</span> <Loading width={20} height={20} color="#FFFFFF" />
+            <Button
+              onClick={handlePublish}
+              className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer"
+            >
+              <span>Update Page</span>{" "}
+              <Loading width={20} height={20} color="#FFFFFF" />
             </Button>
           </div>
           <p className="text-[64px] font-bold leading-[72px] tracking-[-2px] text-[#2E2E27] mx-auto w-full">
@@ -176,23 +153,22 @@ export default function AddPage() {
                 accept="image/*"
                 showUploadList={false}
                 beforeUpload={(file) => {
-                  console.log('Before upload check:', file);
                   return true;
                 }}
                 customRequest={({ file, onSuccess, onError }) => {
                   try {
-                    handleImageUpload('cover')({ file });
+                    handleImageUpload("cover")({ file });
                     setTimeout(() => onSuccess("ok"), 0); // Simulate async upload
                   } catch (err) {
-                    console.error('Upload error:', err);
+                    console.error("Upload error:", err);
                     onError(err);
                   }
                 }}
               >
                 {formData.pageCoverImage ? (
-                  <img 
-                    src={URL.createObjectURL(formData.pageCoverImage)} 
-                    alt="Cover preview" 
+                  <img
+                    src={URL.createObjectURL(formData.pageCoverImage)}
+                    alt="Cover preview"
                     className="max-h-full max-w-full object-contain"
                   />
                 ) : (
@@ -263,7 +239,15 @@ export default function AddPage() {
               name="colorPalette"
               label="Enter Colors"
               placeholder="colors..."
-              value={formData.colorPalette }
+              value={formData.colorPalette}
+              onChange={handleChange}
+            />
+
+            <InputField
+              name="font"
+              label="Enter Font"
+              placeholder="fonts..."
+              value={formData.font}
               onChange={handleChange}
             />
 
@@ -275,35 +259,35 @@ export default function AddPage() {
               value={formData.websiteUrl}
               onChange={handleChange}
             />
-            {(formData.websiteUrl.length > 5 && !urlPattern.test(formData.websiteUrl) ) && (
-              <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">
-                Please enter a valid website URL
-              </p>
-            )}
-            
+            {formData.websiteUrl.length > 5 &&
+              !urlPattern.test(formData.websiteUrl) && (
+                <p className="text-red text-12 mt-[-12px] tablet:mt-[-20px] laptop:gmt-[-28px]">
+                  Please enter a valid website URL
+                </p>
+              )}
+
             {/* Modified Main Image Upload */}
             <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <Upload
                 accept="image/*"
                 showUploadList={false}
                 beforeUpload={(file) => {
-                  console.log('Before upload check:', file);
                   return true;
                 }}
                 customRequest={({ file, onSuccess, onError }) => {
                   try {
-                    handleImageUpload('main')({ file });
+                    handleImageUpload("main")({ file });
                     setTimeout(() => onSuccess("ok"), 0); // Simulate async upload
                   } catch (err) {
-                    console.error('Upload error:', err);
+                    console.error("Upload error:", err);
                     onError(err);
                   }
                 }}
               >
                 {formData.pageImage ? (
-                  <img 
-                    src={URL.createObjectURL(formData.pageImage)} 
-                    alt="Main preview" 
+                  <img
+                    src={URL.createObjectURL(formData.pageImage)}
+                    alt="Main preview"
                     className="max-h-full max-w-full object-contain"
                   />
                 ) : (
@@ -311,7 +295,7 @@ export default function AddPage() {
                 )}
               </Upload>
             </div>
-            
+
             <Button
               onClick={handlePublish}
               className="flex items-center gap-2 border border-[#000] bg-[#000] px-4 py-2 text-16 text-[#FFFFFF] hover:bg-opacity-90 w-fit h-fit mr-0 ml-auto whitespace-nowrap cursor-pointer"
@@ -349,13 +333,7 @@ const InputField = ({
 );
 
 // Text Area Component
-const TextAreaField = ({
-  name,
-  label,
-  placeholder,
-  value,
-  onChange,
-}) => (
+const TextAreaField = ({ name, label, placeholder, value, onChange }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
     <TextArea
@@ -370,7 +348,6 @@ const TextAreaField = ({
   </div>
 );
 
-// Select Field Component
 const SelectField = ({
   name,
   label,
@@ -380,6 +357,9 @@ const SelectField = ({
 }) => (
   <div className="w-full flex flex-col gap-3">
     <p className="font-16 font-medium text-[#2E2E27]">{label}</p>
-    <Component value={onChange} initialValue={value} />
+    <Component
+      onChange={(res) => onChange({ name, value: res.value })}
+      initialValue={value}
+    />
   </div>
 );

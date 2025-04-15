@@ -3,71 +3,62 @@ import { Select } from "antd";
 import { store } from "@/stores/store";
 
 interface Tag {
-  _id: string;  
   id: string;
   title: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+
 }
 
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[] | string;
+  initialValue?: { id: string; title: string }[];
+  onChange: (data: { name: string; value: { id: string }[] }) => void;
 }
 
-export function SelectIndustry({ value, initialValue }: SelectCategoryTypeProps) {
-  const { metrics, fetchIndustries, token } = store((state) => ({
+export function SelectIndustry({ initialValue = [], onChange }: SelectCategoryTypeProps) {
+  const { metrics, fetchIndustries } = store((state) => ({
     metrics: state.metrics,
     fetchIndustries: state.fetchIndustries,
-    token: state.token,
   }));
 
-  const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
-
+  const [selectedValue, setSelectedValue] = useState<string[]>([]);
 
   useEffect(() => {
-    // Fetch industries if they are not already in the state
     if (!metrics.industries.data.length) {
-      fetchIndustries(token);
+      fetchIndustries();
     }
-  }, [metrics.industries.data, fetchIndustries, token]);
+  }, [metrics.industries.data, fetchIndustries]);
 
-  const handleChange = (selected: string[]) => {
-    setSelectedValue(selected); // Update local state
-    value({
+   useEffect(() => {
+  if (initialValue?.length && metrics.industries.data.length) {
+    const ids = initialValue.map((val) => val.id);
+    setSelectedValue(ids);
+  }
+}, [initialValue, metrics.industries.data]);
+
+  const handleChange = (ids: string[]) => {
+    setSelectedValue(ids);
+    onChange({
       name: "industry",
-      value: selected,
+      value: ids.map((id) => ({ id })),
     });
   };
 
-  // Generate options based on industries data
   const options = metrics.industries.data.map((tag: Tag) => ({
     value: tag.id,
-    label: tag.name,
+    label: tag.title,
   }));
 
-    // Update selected value when initialValue prop changes
-    useEffect(() => {
-      if (initialValue) {
-        // If initialValue is a string, convert it into an array to match the expected format
-        setSelectedValue(Array.isArray(initialValue) ? initialValue : [initialValue]);
-      }
-    }, [initialValue]); // Runs when the initialValue changes
-  
-  
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
-      // defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      value={selectedValue}
       placeholder="Select Industry"
       onChange={handleChange}
       options={options}
       style={{ width: "100%" }}
       maxTagCount="responsive"
+      loading={!metrics.industries.data.length}
     />
   );
 }

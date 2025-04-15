@@ -68,6 +68,7 @@ const config: Config = {
       },
       'myGreen-400': "#21AB68",
       'green-500': "#3E7B52",
+      'green-600': "#3E7B52",
       'green-400': '#21AB68',
       'error': '#E03C00',
       'borderDefault': '#E8E8EA',

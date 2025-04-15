@@ -4,42 +4,47 @@ import { Select } from "antd";
 import { store } from "@/stores/store";
 
 interface Tag {
-  _id: string;
   id: string;
   title: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
 }
 
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[] | string;
+  initialValue?: { id: string; title: string }[];
+  onChange: (data: { name: string; value: { id: string }[] }) => void;
 }
 
-export function SelectStack({ value, initialValue }: SelectCategoryTypeProps) {
-  const { metrics, fetchStacks, token } = store((state) => ({
+
+export function SelectStack({ initialValue = [], onChange }: SelectCategoryTypeProps) {
+  const { metrics, fetchStacks } = store((state) => ({
     metrics: state.metrics,
     fetchStacks: state.fetchStacks,
-    token: state.token,
   }));
 
   const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
 
 
   useEffect(() => {
-    // Fetch stacks if they are not already in the state
     if (!metrics.stacks.data.length) {
-      fetchStacks(token);
+      fetchStacks();
     }
-  }, [metrics.stacks.data, fetchStacks, token]);
+  }, [metrics.stacks.data, fetchStacks]);
+
+   
+  // Update selected value when initialValue prop changes
+  useEffect(() => {
+    if (initialValue?.length && metrics.stacks.data.length) {
+      const ids = initialValue.map((val) => val.id);
+      setSelectedValue(ids);
+    }
+  }, [initialValue, metrics.stacks.data]);
+
 
   const handleChange = (selected: string[]) => {
     setSelectedValue(selected); // Update local state
-    value({
+    onChange({
       name: "stacks",
-      value: selected,
+      value: selected.map((id) => ({ id })),
     });
   };
 
@@ -49,15 +54,7 @@ export function SelectStack({ value, initialValue }: SelectCategoryTypeProps) {
     label: tag.name,
   }));
 
-  
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue) {
-      // If initialValue is a string, convert it into an array to match the expected format
-      setSelectedValue(Array.isArray(initialValue) ? initialValue : [initialValue]);
-    }
-  }, [initialValue]); // Runs when the initialValue changes
-
+ 
 
 
   return (

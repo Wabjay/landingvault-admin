@@ -1,68 +1,65 @@
 import React, { useEffect, useState } from "react";
-import axios from "@/lib/axios";
 import { Select } from "antd";
 import { store } from "@/stores/store";
 
+
 interface Tag {
-  _id: string;
   id: string;
   title: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
 }
 
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[] | string;
+  initialValue?: { id: string; title: string }[];
+  onChange: (data: { name: string; value: { id: string }[] }) => void;
 }
 
-export function SelectType({ value, initialValue }: SelectCategoryTypeProps) {
-  const { metrics, fetchTypes, token } = store((state) => ({
+
+export function SelectType({ initialValue = [], onChange }: SelectCategoryTypeProps) {
+  const { metrics, fetchTypes } = store((state) => ({
     metrics: state.metrics,
     fetchTypes: state.fetchTypes,
-    token: state.token,
   }));
   
   const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
 
   useEffect(() => {
-    // Fetch types if they are not already in the state
     if (!metrics.types.data.length) {
-      fetchTypes(token);
+      fetchTypes();
     }
-  }, [metrics.types.data, fetchTypes, token]);
+  }, [metrics.types.data, fetchTypes]);
+
+
+   // Set selected values when data and value are both available
+    useEffect(() => {
+      if (initialValue?.length && metrics.types.data.length) {
+        const ids = initialValue.map((val) => val.id);
+        setSelectedValue(ids);
+      }
+    }, [initialValue, metrics.types.data]);
+  
 
   const handleChange = (selected: string[]) => {
     setSelectedValue(selected); // Update local state
-    value({
+    onChange({
       name: "type",
-      value: selected,
+      value: selected.map((id) => ({ id })),
     });
   };
 
   // Generate options based on types data
   const options = metrics.types.data.map((tag: Tag) => ({
     value: tag.id,
-    label: tag.name,
+    label: tag.title,
   }));
 
-    // Update selected value when initialValue prop changes
-    useEffect(() => {
-      if (initialValue) {
-        // If initialValue is a string, convert it into an array to match the expected format
-        setSelectedValue(Array.isArray(initialValue) ? initialValue : [initialValue]);
-      }
-    }, [initialValue]); // Runs when the initialValue changes
-  
+
   
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
-      // defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      value={selectedValue} 
       placeholder="Select Type"
       onChange={handleChange}
       options={options}

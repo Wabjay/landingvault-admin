@@ -14,7 +14,6 @@ const Pages = () => {
 
   const {sortedPages:pagesData} = store()
 
-console.log(pagesData)
   return (
     <div className="w-full">
     <div className="bg-[#FFF]">
