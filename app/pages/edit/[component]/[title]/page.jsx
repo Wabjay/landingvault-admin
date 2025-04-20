@@ -222,11 +222,11 @@ export default function UpdatePage() {
             <TextAreaField name="brandDescription" label="About" placeholder="Describe Pitch deck" value={formData.brandDescription} onChange={handleTextChange} />
 
             <SelectField name="componentType" label="Component Type" component={SelectComponentType} value={formData.componentType}  onChange={handleFormDataUpdate} />
-            <SelectField name="industry" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
+            <SelectField name="industries" label="Industry" component={SelectIndustry} value={formData.industry} onChange={handleFormDataUpdate} />
             <SelectField name="stacks" label="Stack" component={SelectStack} value={formData?.stacks} onChange={handleFormDataUpdate} />
             <SelectField name="mode" label="Mode" component={SelectMode} value={formData.mode} onChange={handleFormDataUpdate} />
-            <SelectField name="style" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
-            <SelectField name="type" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
+            <SelectField name="styles" label="Style" component={SelectStyle} value={formData.style} onChange={handleFormDataUpdate} />
+            <SelectField name="types" label="Type" component={SelectType} value={formData.type} onChange={handleFormDataUpdate} />
             <InputField name="colorPalette" label="Enter Colors" placeholder="colors..." value={color} onChange={handleChange} />
             <InputField name="font" label="Enter Fonts" placeholder="fonts..." value={font} onChange={handleChange} />
 
