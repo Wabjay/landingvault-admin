@@ -83,18 +83,19 @@ export default function UpdatePage() {
   });
   useEffect(() => {
     if (pageData) {
-      const mapToObjects = (arr = []) =>
-        arr.map((item) => item);
+      console.log(pageData)
+      // const mapToObjects = (arr = []) =>
+      //   arr.map((item) => item);
   
       const colors = pageData.colorPalette?.join(", ") || "N/A";
       const fonts = pageData.font?.join(", ") || "N/A";
       setFormData({
         ...pageData,
-        componentType: mapToObjects(pageData.componentType),
-        industry: mapToObjects(pageData.industry),
-        stacks: mapToObjects(pageData.stacks),
-        style: mapToObjects(pageData.style),
-        type: mapToObjects(pageData.type),
+        componentType: pageData.componentType,
+        industry: pageData.industry,
+        stacks: pageData.stacks,
+        style: pageData.style,
+        type: pageData.type,
         colorPalette: pageData.colorPalette || [],
         font: pageData.font || [],
       });
