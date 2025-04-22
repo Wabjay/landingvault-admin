@@ -32,7 +32,7 @@ const InfoCard = ({ info, pageName }) => {
         </Link>
         <Link href={{
           pathname: `category/${info.id}`,
-          query: { ref: pageName === "industries" ? "industry" : pageName === "components" ? pageName : pageName.slice(0, -1) }, // Example query parameters
+          query: { ref: pageName === "components" ? pageName : pageName }, // Example query parameters
         }} className="mt-6 text-white bg-green-600 w-[113px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90">
           Edit
         </Link>  
