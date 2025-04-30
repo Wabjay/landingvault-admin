@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { useNavigation } from "@/components/utils/navigations";
 import { handleDeleteCategory } from "@/lib/deleteData";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
+import { useInitFetchCategories } from "@/lib/useInitFetchCategories";
 
 interface FormData {
   name: string;
@@ -23,7 +24,7 @@ interface FormData {
 
 const SinglePitch = () => {
   const pathname = usePathname();
-  const { fetchSingle, SingleData, token, setIsComponentLoading, componentLoading, fetchComponents,fetchIndustries, fetchStacks,fetchTypes, fetchStyles, fetchUsers } = store();
+  const { fetchSingle, SingleData, token, setIsComponentLoading, componentLoading } = store();
   const isBigScreen = useMediaQuery({ query: "(min-width: 1024px)" });
   const { navigateTo } = useNavigation(); 
 
@@ -37,6 +38,8 @@ const SinglePitch = () => {
     const [type, setType] = useState<any>(null);
     const [id, setId] = useState<string>("");
     const [edit, setEdit] = useState<any>("true");
+
+    const initFetchCategories = useInitFetchCategories(); // Call the hook at the top level
 
     useEffect(() => {
       const currentPage = pathname.split("/")[3];
@@ -81,51 +84,43 @@ console.log(type)
   };
 
   const handlePublish = async () => {
-    try {
-      setIsComponentLoading(true);
-     await axios.put(`${type}/update/${id}`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "Access-Control-Allow-Credentials": true,
-        },
-      })
-        // setFormData({
-        //   name: response.data.name,
-        //   title: response.data.title, 
-        //   description: response.data.description,
-        // })
-        setFormData({
-          name: "",
-          title: "", 
-          description: "",
+      try {
+        setIsComponentLoading(true);
+       await axios.put(`${type}/update/${id}`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "Access-Control-Allow-Credentials": true,
+          },
         })
-      fetchUsers(token)
-        fetchComponents()
-        fetchTypes()
-        fetchStacks()
-        fetchStyles()
-        fetchIndustries()
-        Notification(`${type} Updated Successfully`);
-        navigateTo('/categories')
-    } catch (error) {
-      Notification(`Error Uploading ${type}`);
-      console.error(`Error Uploading ${type}: `, error);
-    } finally {
-      setIsComponentLoading(false);
-    }
-  };
+          // setFormData({
+          //   name: response.data.name,
+          //   title: response.data.title, 
+          //   description: response.data.description,
+          // })
+          initFetchCategories
+          setFormData({
+            name: "",
+            title: "", 
+            description: "",
+          })
+          Notification(`${type} Updated Successfully`);
+          navigateTo('/categories')
+      } catch (error) {
+        Notification(`Error Uploading ${type}`);
+        console.error(`Error Uploading ${type}: `, error);
+      } finally {
+        setIsComponentLoading(false);
+      }
+    };
+  
+  
   let navigate =(value: string)=>{
-    fetchUsers(token)
-    fetchComponents()
-    fetchTypes()
-    fetchStacks()
-    fetchStyles()
-    fetchIndustries()
+    initFetchCategories
   navigateTo('/categories')
 }
   const onDeleteCat = () => {
-    handleDeleteCategory(type, slug, token, navigate);
+    handleDeleteCategory(type, slug, token, navigate, formData.name);
   };
   return (
     <div className="w-full">

@@ -10,6 +10,7 @@ import BackButton from "@/components/blocks/BackButton";
 import { SelectCategoryType } from "@/components/selections/SelectCategoryType";
 import Categories from '../[id]/page';
 import { useRouter } from "next/navigation";
+import { useInitFetchCategories } from "@/lib/useInitFetchCategories";
 
 interface FormData {
   name: string;
@@ -20,7 +21,7 @@ interface FormData {
 
 export default function AddCategory() {
   const { TextArea } = Input;
-  const {setIsComponentLoading, fetchComponents,fetchIndustries, fetchStacks,fetchTypes, fetchStyles, fetchUsers, token} = store()
+  const {setIsComponentLoading, token} = store()
   const router = useRouter();
 
   const [formData, setFormData] = useState<FormData>({
@@ -30,6 +31,8 @@ export default function AddCategory() {
     category: ""
   });
 
+      const initFetchCategories = useInitFetchCategories(); // Call the hook at the top level
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -62,13 +65,7 @@ export default function AddCategory() {
         category: ""
 
       });
-        fetchUsers(token)
-        fetchComponents()
-        fetchTypes()
-        fetchStacks()
-        fetchStyles()
-        fetchIndustries()
-
+        initFetchCategories
         router.push(`/categories`);
 
         Notification("Category Added Successfully");

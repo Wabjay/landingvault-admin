@@ -11,11 +11,11 @@ export function SelectCategoryType({ value, initialValue }: SelectCategoryTypePr
 
   // Mode options
   const tags = [
-    { name: "industry", value: "industries" },
-    { name: "type", value: "types" },
-    { name: "stack", value: "stacks" },
-    { name: "style", value: "styles" },
-    { name: "components", value: "components" },
+    { name: "Industry", value: "industries" },
+    { name: "Type", value: "types" },
+    { name: "Stack", value: "stacks" },
+    { name: "Style", value: "styles" },
+    { name: "Components", value: "components" },
   ];
 
   // Handle selection change

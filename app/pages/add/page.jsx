@@ -18,6 +18,7 @@ import { Notification } from "@/components/blocks/Notification";
 import { useNavigation } from "@/components/utils/navigations";
 import { Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import Image from "next/image";
 
 export default function AddPage() {
   const { token, setIsComponentLoading, fetchAllPages } = store();
@@ -56,12 +57,6 @@ export default function AddPage() {
     (type) =>
     ({ file }) => {
       if (file) {
-        // console.log(
-        //   `Uploading ${type} image:`,
-        //   file.name,
-        //   file.size,
-        //   file.type
-        // );
         setFormData((prevFormData) => ({
           ...prevFormData,
           [type === "cover" ? "pageCoverImage" : "pageImage"]: file,
@@ -148,7 +143,7 @@ export default function AddPage() {
 
           <div className="w-full px-4 tablet:px-6 laptop:px-0 flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
             {/* Modified Cover Image Upload */}
-            <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
+            <div className="relative w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <Upload
                 accept="image/*"
                 showUploadList={false}
@@ -166,13 +161,14 @@ export default function AddPage() {
                 }}
               >
                 {formData.pageCoverImage ? (
-                  <img
+                  <Image
                     src={URL.createObjectURL(formData.pageCoverImage)}
                     alt="Cover preview"
-                    className="max-h-full max-w-full object-contain"
+                    fill
+                    className="object-cover" 
                   />
                 ) : (
-                  <Button icon={<UploadOutlined />}>Upload Cover Image</Button>
+                  <Button icon={<UploadOutlined />} className="absolute z-50">Upload Cover Image</Button>
                 )}
               </Upload>
             </div>
@@ -267,7 +263,7 @@ export default function AddPage() {
               )}
 
             {/* Modified Main Image Upload */}
-            <div className="w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
+            <div className="relative w-full overflow-hidden flex flex-col gap-4 bg-white h-[342px] items-center justify-center border border-dashed border-[#D2D2CF]">
               <Upload
                 accept="image/*"
                 showUploadList={false}
@@ -285,10 +281,12 @@ export default function AddPage() {
                 }}
               >
                 {formData.pageImage ? (
-                  <img
+                  <Image
                     src={URL.createObjectURL(formData.pageImage)}
                     alt="Main preview"
-                    className="max-h-full max-w-full object-contain"
+                    fill
+                    className="object-cover" 
+                    // className="max-h-full max-w-full object-contain"
                   />
                 ) : (
                   <Button icon={<UploadOutlined />}>Upload Main Image</Button>

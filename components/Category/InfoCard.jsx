@@ -2,11 +2,20 @@ import React from "react";
 import Link from 'next/link';
 import SkeletonLoader from "../Skeleton";
 import { createSlug } from "../blocks/slug";
+import { store } from "@/stores/store";
+import { useInitFetchCategories } from "@/lib/useInitFetchCategories";
+import { handleDeleteCategory } from "@/lib/deleteData";
 
 const InfoCard = ({ info, pageName }) => {
 
-  console.log(info.id);
-  const slug = createSlug(info.id);  // Create the slug once, to reuse in both links
+    const {  token } = store();
+    const initFetchCategories = useInitFetchCategories(); // Call the hook at the top level
+  
+    const slug = createSlug(info.id);  // Create the slug once, to reuse in both links
+
+    const onDeleteCat = () => {
+      handleDeleteCategory(pageName, slug, token, initFetchCategories, info.name);
+    };
 
   return (
     <div className="relative flex flex-col justify-between p-6 bg-white border border-[#21AB68] text-[#2D2D2D] shadow-metric-card">
@@ -36,6 +45,13 @@ const InfoCard = ({ info, pageName }) => {
         }} className="mt-6 text-white bg-green-600 w-[113px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90">
           Edit
         </Link>  
+        
+        <button
+            onClick={onDeleteCat}
+            className="mt-6 text-white bg-[#FF6464] border-[#FF6464] w-[113px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90"
+          >
+            Delete
+          </button>
       </div>
     </div>
   );

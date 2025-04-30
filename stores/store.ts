@@ -212,7 +212,7 @@ const fetchData = async (
       metrics: { ...state.metrics, [stateKey]: response.data },
       overlayLoading: false,
     }));
-    console.log(stateKey, response.data)
+    // console.log(stateKey, response.data)
   } catch (error) {
     console.error(`Error fetching ${stateKey}:`, error);
     setState(()=> ({ overlayLoading: false, error: `Error fetching ${stateKey}` }));  // Set error state

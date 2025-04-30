@@ -26,7 +26,6 @@ const Categories = () => {
 
   useEffect(() => {
     const currentPage = pathname.split("/")[2]; // Extract page name dynamically
-    // const currentPage = currentPageReal === "stack" ? "stacks" : currentPageReal
     if (currentPage) {
       setPageName(currentPage);
 
@@ -48,7 +47,7 @@ const Categories = () => {
                 href={`add`}
                 className="text-white border border-green-600 bg-green-600 w-[175px] h-10 flex items-center justify-center text-14 font-medium hover:bg-opacity-90"
               >
-                Create tags
+                Create category
               </Link>
             </div>
 

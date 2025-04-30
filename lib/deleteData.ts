@@ -52,13 +52,14 @@ export const handleDeleteCategory = async (
   name: string,
   id: string,
   token: string,
-  navigateTo: (path: string) => void
+  navigateTo: (path: string) => void,
+  title?: string,
 ) => {
   const { confirm } = Modal;
 
   confirm({
     title: "Delete Category",
-    content: `Are you sure you want to delete ${name}?`,
+    content: `Are you sure you want to delete ${title}?`,
     okText: "Yes",
     okType: "danger",
     onOk: async () => {
