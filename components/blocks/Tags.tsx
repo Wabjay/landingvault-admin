@@ -11,49 +11,47 @@ interface Tag {
   title: string;
 }
 
-export default function Tags() {
+interface TagsProps {
+  onTagSelect: (tag: string) => void;
+}
+export default function Tags({ onTagSelect }: TagsProps) {
   const [activeTag, setActiveTag] = useState<string>("Landing page");
   const [tags, setTags] = useState<Tag[]>([]);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const tagsContainerRef = useRef<HTMLUListElement | null>(null);
 
-  const {metrics, pages, fetchPages } = store();
+  const {metrics } = store();
 
   const sortTag = (tag: string) => {
     setActiveTag(tag);
-    console.log(tag)
     const tags = tag
     .toLowerCase()
     .replace("page", "")
     .trim();
-    fetchPages({ component: tag, page: "" });
-
-
   }
-    
-    // useEffect(()=>{
-    //   const filteredPages = pages?.data?.filter(page => page?.componentType[0] === activeTag);
-    //   fetchPages(filteredPages)
-    // },[activeTag, pages])
+
 
 const components = metrics.components.data
-  useEffect(() => {
-    if (components?.length) {
-      const newTags = [...components];
-    
-      // Sort the tags so "Landing Page" comes first, and the others follow
-      newTags.sort((a, b) => {
-        if (a.name === "Landing page") return -1;  // Move "Landing Page" to the front
-        if (b.name === "Landing page") return 1;   // Keep "Landing Page" at the front
-        return 0; // Keep other tags in the same order
-      });
-    
-      setTags(newTags);
-    } else {
-      setTags([]);
-    }
-  }, [components]);
+
+useEffect(() => {
+  onTagSelect(activeTag);
+}, [activeTag, onTagSelect]);
+
+useEffect(() => {
+  if (components?.length) {
+    const newTags = [...components];
+    newTags.sort((a, b) => {
+      if (a.name === "Landing page") return -1;
+      if (b.name === "Landing page") return 1;
+      return 0;
+    });
+    setTags(newTags);
+    setActiveTag("Landing page"); // <-- default active tag
+  } else {
+    setTags([]);
+  }
+}, [components]);
   
   const cleanSlugA = removeSlug(activeTag.replace('/', ''));
 

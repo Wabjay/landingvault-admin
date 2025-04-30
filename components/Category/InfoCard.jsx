@@ -13,8 +13,12 @@ const InfoCard = ({ info, pageName }) => {
   
     const slug = createSlug(info.id);  // Create the slug once, to reuse in both links
 
+    let navigate =()=>{
+      initFetchCategories
+    navigateTo('/categories')
+  }
     const onDeleteCat = () => {
-      handleDeleteCategory(pageName, slug, token, initFetchCategories, info.name);
+      handleDeleteCategory(pageName, slug, token, navigate, info.name);
     };
 
   return (

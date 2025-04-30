@@ -103,6 +103,7 @@ type StoreState = {
     pagination: { total: number; page: number; pages: number };
   };
   sortedPages: Page[];
+  pageNumber: number;
   searchInput: string,
   showSearch: boolean,
   searchedPages: Page[];
@@ -163,6 +164,7 @@ const initialState: StoreState = {
     pagination: { total: 0, page: 0, pages: 0 },
   },
   sortedPages:  [],
+  pageNumber: 0,
   searchedPages: [],
   showSearch: false,
   searchInput: ""
@@ -273,7 +275,7 @@ export const store = create<Store>(
           const queryParams = `search=${component ? component : "Landing page"}&page=${page ? page : "1"}`;
           const { data } = await axios.get(`/pages?${queryParams}`);
       
-          set({ sortedPages: data.pages });
+          set({ sortedPages: data.pages, pageNumber: data.pagination.totalItems });
           // console.log(data);
         } catch (error) {
           console.error("Error fetching data:", error);

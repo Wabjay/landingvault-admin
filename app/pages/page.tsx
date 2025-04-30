@@ -7,13 +7,33 @@ import Link from "next/link";
 import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
 import Tags from "@/components/blocks/Tags";
 import Search from "@/components/blocks/Search";
+import Pagination from "@/components/blocks/Pagination";
 
 
 
 const Pages = () => {
 
-  const {sortedPages:pagesData} = store()
+  const {fetchPages, sortedPages:pagesData, pageNumber} = store()
+  const [activeTag, setActiveTag] = useState("Landing page");
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const totalItems = pageNumber || 0; // ✅ adjust this as per your backend response
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTag]);
+  
+  useEffect(() => {
+    if (activeTag && currentPage) {
+      fetchPages({ component: activeTag, page: String(currentPage) });
+    }
+  }, [activeTag, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  
   return (
     <div className="w-full">
     <div className="bg-[#FFF]">
@@ -29,7 +49,7 @@ const Pages = () => {
           <Search />
                       </div>
                       <div className="w-fit max-w-[1100px] ml-0 overflow-hidden no-scrollbar px-4 tablet:px-6 laptop:px-8 desktop:px-0">
-                      <Tags />
+                      <Tags onTagSelect={setActiveTag} />
                       </div>
                       {(pagesData?.length === 0 ) ? (
     <EmptyPitch />
@@ -41,6 +61,11 @@ const Pages = () => {
           <PageCard key={index} page={item} />
         ))}
         </div>
+        <Pagination
+      currentPage={currentPage}
+      totalItems={totalItems}
+      onPageChange={handlePageChange}
+    />
     </div>
         )}
          
