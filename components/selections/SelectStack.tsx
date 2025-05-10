@@ -4,64 +4,68 @@ import { Select } from "antd";
 import { store } from "@/stores/store";
 
 interface Tag {
-  _id: string;
+  id: string;
   title: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
 }
 
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  initialValue?: { id: string; title: string }[];
+  onChange: (data: { name: string; value: { id: string }[] }) => void;
 }
 
-export function SelectStack({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
 
+export function SelectStack({ initialValue = [], onChange }: SelectCategoryTypeProps) {
+  const { metrics, fetchStacks } = store((state) => ({
+    metrics: state.metrics,
+    fetchStacks: state.fetchStacks,
+  }));
 
-  const { metrics } = store();
+  const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
+
 
   useEffect(() => {
-    setTags(metrics.stacks.data);
-    console.log(metrics.stacks.data);
-  }, []);
+    if (!metrics.stacks.data.length) {
+      fetchStacks();
+    }
+  }, [metrics.stacks.data, fetchStacks]);
+
+   
+  // Update selected value when initialValue prop changes
+  useEffect(() => {
+    if (initialValue?.length && metrics.stacks.data.length) {
+      const ids = initialValue.map((val) => val.id);
+      setSelectedValue(ids);
+    }
+  }, [initialValue, metrics.stacks.data]);
 
 
   const handleChange = (selected: string[]) => {
-    const data = {
+    setSelectedValue(selected); // Update local state
+    onChange({
       name: "stacks",
-      value: selected,
-    };
-    value(data);
+      value: selected.map((id) => ({ id })),
+    });
   };
 
-  useEffect(() => {
-    const options = tags.map(tag => ({
-      value: tag.name,
-      label: tag.name,
-    }));
-    setOptions(options);
-  }, [tags]);
+  // Generate options based on stacks data
+  const options = metrics.stacks.data.map((tag: Tag) => ({
+    value: tag.id,
+    label: tag.name,
+  }));
 
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
-    }
-  }, [initialValue]);
+ 
+
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
-      placeholder="Stacks"
+      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      placeholder="Select Stack"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );

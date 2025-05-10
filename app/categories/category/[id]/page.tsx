@@ -11,6 +11,10 @@ import Loading from "@/components/blocks/LoadingComponent";
 import { Notification } from "@/components/blocks/Notification";
 import TextArea from "antd/es/input/TextArea";
 import { useRouter } from "next/router";
+import { useNavigation } from "@/components/utils/navigations";
+import { handleDeleteCategory } from "@/lib/deleteData";
+import { LoadingOverlay } from "@/components/blocks/LoadingOverlay";
+import { useInitFetchCategories } from "@/lib/useInitFetchCategories";
 
 interface FormData {
   name: string;
@@ -22,6 +26,7 @@ const SinglePitch = () => {
   const pathname = usePathname();
   const { fetchSingle, SingleData, token, setIsComponentLoading, componentLoading } = store();
   const isBigScreen = useMediaQuery({ query: "(min-width: 1024px)" });
+  const { navigateTo } = useNavigation(); 
 
   // Local state for form data
   const [formData, setFormData] = useState<FormData>({
@@ -31,16 +36,24 @@ const SinglePitch = () => {
   });
     const [slug, setSlug] = useState<any>(null);
     const [type, setType] = useState<any>(null);
-  
+    const [id, setId] = useState<string>("");
+    const [edit, setEdit] = useState<any>("true");
+
+    const initFetchCategories = useInitFetchCategories(); // Call the hook at the top level
+
     useEffect(() => {
       const currentPage = pathname.split("/")[3];
       const url = new URL(window.location.href);
       const params = new URLSearchParams(url.search);
   
       // Example of getting query params
+      const edit = params.get('edit');
       const type = params.get('ref');
   setType(type)
   setSlug(currentPage)
+setEdit(edit)
+console.log(type)
+
     }, [pathname]);
 
   useEffect(() => {
@@ -52,61 +65,85 @@ const SinglePitch = () => {
   useEffect(() => {
     if (SingleData) {
       setFormData({
-        name: SingleData?.data?.name || "",
-        description: SingleData?.data?.description || "",
-        title: SingleData?.data?.title || "",
+        name: SingleData?.page?.name || "",
+        description: SingleData?.page?.description || "",
+        title: SingleData?.page?.title || "",
       });
+      setId(SingleData?.page?.id || "")
     }
-    console.log(SingleData)
+
+    console.log(SingleData?.page?.description)
   }, [SingleData]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePublish = async () => {
-    try {
-      setIsComponentLoading(true);
-      await axios.post("/pitchdeck/create", formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "Access-Control-Allow-Credentials": true,
-        },
-      });
-      setFormData({
-        name: "",
-        title: "",
-        description: "",
-      });
-      Notification("Pitch Uploaded Successfully");
-    } catch (error) {
-      Notification("Error Uploading Pitch");
-      console.error("Error uploading pitch:", error);
-    } finally {
-      setIsComponentLoading(false);
-    }
+  const handleEdit = () => {
+    setEdit("true");
   };
 
+  const handlePublish = async () => {
+      try {
+        setIsComponentLoading(true);
+       await axios.put(`${type}/update/${id}`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "Access-Control-Allow-Credentials": true,
+          },
+        })
+          // setFormData({
+          //   name: response.data.name,
+          //   title: response.data.title, 
+          //   description: response.data.description,
+          // })
+          initFetchCategories
+          setFormData({
+            name: "",
+            title: "", 
+            description: "",
+          })
+          Notification(`${type} Updated Successfully`);
+          navigateTo('/categories')
+      } catch (error) {
+        Notification(`Error Uploading ${type}`);
+        console.error(`Error Uploading ${type}: `, error);
+      } finally {
+        setIsComponentLoading(false);
+      }
+    };
+  
+  
+  let navigate =(value: string)=>{
+    initFetchCategories
+  navigateTo('/categories')
+}
+  const onDeleteCat = () => {
+    handleDeleteCategory(type, slug, token, navigate, formData.name);
+  };
   return (
     <div className="w-full">
       <div className="bg-[#FFF]">
+      <LoadingOverlay />
         <div className="w-full laptop:max-w-[700px] mx-auto p-4 tablet:p-6 laptop:p-8 xl:px-0 flex flex-col gap-6 tablet:gap-10 laptop:gap-14">
           <div className="w-full flex justify-between items-start laptop:max-w-[1152px] mx-auto px-4 tablet:px-6 laptop:px-8 xl:px-0 py-[40px] tablet:pt-[80px] laptop:pt-[100px]">
             <BackButton color="white" />
-            <Button
-              onClick={handlePublish}
+           <Button
+              onClick={edit === "false" ? handleEdit : handlePublish}
               className="flex items-center text-white border border-green-600 bg-green-600 w-[175px] h-10 justify-center text-14 font-medium hover:bg-opacity-90 whitespace-nowrap cursor-pointer"
               disabled={componentLoading}
             >
-              <span>Save and upload</span>
-              {componentLoading && <Loading width={20} height={20} color="#FFFFFF" />}
+              <span>{edit === "false" ? 'Edit' : 'Update'}</span>
+              <Loading width={20} height={20} color="#FFFFFF" />
             </Button>
+            
           </div>
           <div className="w-[90%] max-w-[700px] flex flex-col gap-4 tablet:gap-6 laptop:gap-8 mx-auto">
             <InputField
               name="name"
               label="Tagname"
+              edit={edit === "false" ? true : false}
               placeholder="Olivia Rhye"
               value={formData.name}
               onChange={handleChange}
@@ -114,6 +151,7 @@ const SinglePitch = () => {
             <InputField
               name="title"
               label="Enter Title"
+              edit={edit === "false" ? true : false}
               placeholder="Title ..."
               value={formData.title}
               onChange={handleChange}
@@ -121,11 +159,18 @@ const SinglePitch = () => {
             <TextAreaField
               name="description"
               label="Description..."
+              edit={edit === "false" ? true : false}
               placeholder="Describe Pitch deck"
               value={formData.description}
               onChange={handleChange}
             />
           </div>
+          <button
+            onClick={onDeleteCat}
+            className="bg-[#FF6464] border-[#FF6464] w-[80%] max-w-[360px] mx-auto shadow-navbarLink inline-flex items-center justify-center p-2 text-[#ffffff] text-sm leading-5 font-normal focus:outline-none"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -138,6 +183,7 @@ interface InputFieldProps {
   name: string;
   label: string;
   placeholder: string;
+  edit: boolean;
   value: string | number;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   type?: string;
@@ -148,6 +194,7 @@ const InputField = ({
   label,
   placeholder,
   value,
+  edit,
   onChange,
   type = "text",
 }: InputFieldProps) => (
@@ -158,6 +205,7 @@ const InputField = ({
       name={name}
       placeholder={placeholder}
       value={value}
+      disabled={edit}
       onChange={onChange}
       className="w-full px-4 py-2 border border-[#C1C9C8]"
     />
@@ -169,11 +217,13 @@ interface TextAreaFieldProps {
   label: string;
   placeholder: string;
   value: string;
+  edit: boolean;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const TextAreaField = ({
   name,
+  edit,
   label,
   placeholder,
   value,
@@ -188,6 +238,7 @@ const TextAreaField = ({
       onChange={onChange}
       className="w-full h-[121px] px-4 py-6 border border-[#C1C9C8]"
       showCount
+      disabled={edit}
       style={{ resize: "none" }}
     />
   </div>

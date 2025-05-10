@@ -1,60 +1,43 @@
 import React, { useEffect, useState } from "react";
-import axios from "@/lib/axios";
 import { Select } from "antd";
 
-interface Tag {
-  _id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  value: (data: { name: string; value: string }) => void;
+  initialValue: string;
 }
 
 export function SelectMode({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
+  const [selectedValue, setSelectedValue] = useState<string>(''); // Controlled state for value
 
+  // Mode options
+  const tags = [
+    { name: "light", value: "light" },
+    { name: "dark", value: "dark" },
+  ];
 
-const tags = [
-    {name:"light", value:"light"},
-    {name:"dark", value:"dark"}
-  ]
-
-  const handleChange = (selected: string[]) => {
-    const data = {
-      name: "mode",
-      value: selected,
-    };
-    value(data);
+  // Handle selection change
+  const handleChange = (selected: string) => {
+    setSelectedValue(selected); // Update local state
+    value({ name: "mode", value: selected }); // Pass the updated value back to parent
   };
-
-  useEffect(() => {
-    const options = tags.map(tag => ({
-      value: tag.name,
-      label: tag.name,
-    }));
-    setOptions(options);
-  }, [tags]);
 
   // Update selected value when initialValue prop changes
   useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
+    if (initialValue) {
+      // If initialValue is a string, convert it into an array to match the expected format
+      setSelectedValue(initialValue);
     }
-  }, [initialValue]);
+  }, [initialValue]); // Runs when the initialValue changes
 
   return (
     <Select
       className="h-12"
-      value={initialValue}
-      placeholder="Pitch Deck Category"
+      // mode="multiple"
+      value={selectedValue} // Controlled value
+      placeholder="Select Mode"
       onChange={handleChange}
-      options={options}
-      style={{ width: '100%' }}
+      options={tags.map(tag => ({ value: tag.value, label: tag.name }))}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );

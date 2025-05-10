@@ -1,66 +1,84 @@
-// deleteData.ts
-
-import { Modal } from "antd";
+import { message, Modal } from "antd";
 import axios from "@/lib/axios";
 
-export const handleDeletePitch = async (name: string, id: string, token: string, navigateTo: (path: string) => void) => {
+export const handleDeletePage = async (
+  name: string,
+  id: string,
+  token: string,
+  navigateTo?: (path: string) => void // Optional navigateTo
+): Promise<void> => {
   const { confirm } = Modal;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-console.log(id)
 
   confirm({
-    title: "Delete Pitch",
-    content: `Are you sure you want to delete ${name}?`,
+    title: "Delete Page",
+    content: `Are you sure you want to delete "${name}"?`,
     okText: "Yes",
     okType: "danger",
     onOk: async () => {
       try {
+        // Make DELETE request
         await axios.delete(`/page/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
-        navigateTo('/');
-      } catch (error) {
-        console.error("Error deleting pitch:", error);
-        // Handle error state or display error message to the user
+
+        // Show success message
+        message.success(`"${name}" deleted successfully.`);
+
+        // Optional navigation after deletion
+        if (navigateTo) {
+          navigateTo("/"); // Navigate to the desired path
+        }
+      } catch (error: any) {
+        // Log and handle errors
+        console.error("Error deleting page:", error);
+
+        // Extract error message or use default
+        const errorMessage =
+          error.response?.data?.message || "Failed to delete the page. Please try again.";
+        message.error(errorMessage);
       }
     },
     onCancel() {
-      // Handle cancellation if needed
+      console.log("Deletion canceled");
     },
   });
 };
 
 
-
-export const handleDeleteTemplate = async (name: string, id: string, token: string, navigateTo: (path: string) => void) => {
+export const handleDeleteCategory = async (
+  name: string,
+  id: string,
+  token: string,
+  navigateTo: (path: string) => void,
+  title?: string,
+) => {
   const { confirm } = Modal;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-console.log(id)
 
   confirm({
-    title: "Delete Template",
-    content: `Are you sure you want to delete ${name}?`,
+    title: "Delete Category",
+    content: `Are you sure you want to delete ${title}?`,
     okText: "Yes",
     okType: "danger",
     onOk: async () => {
       try {
-        await axios.delete(`/template/${id}`, {
+        await axios.delete(`/${name}/delete/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
-        navigateTo('/templates');
+        message.success(`${name} deleted successfully.`);
+        navigateTo("/"); // Navigate only after successful deletion
       } catch (error) {
-        console.error("Error deleting template:", error);
-        // Handle error state or display error message to the user
+        console.error("Error deleting category:", error);
+        message.error("Failed to delete the category. Please try again.");
       }
     },
     onCancel() {
-      // Handle cancellation if needed
+      console.log("Deletion canceled");
     },
   });
 };

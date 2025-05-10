@@ -8,11 +8,11 @@ export default function Home() {
 
   useEffect(()=>{
 fetchUsers(token)
-fetchComponents(token)
-fetchTypes(token)
-fetchStacks(token)
-fetchStyles(token)
-fetchIndustries(token)
+fetchComponents()
+fetchTypes()
+fetchStacks()
+fetchStyles()
+fetchIndustries()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token])
   return (

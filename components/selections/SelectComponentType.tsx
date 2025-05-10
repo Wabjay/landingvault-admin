@@ -1,68 +1,64 @@
 import React, { useEffect, useState } from "react";
-import axios from "@/lib/axios";
 import { Select } from "antd";
-import { tagss } from "@/data/dummyDatas";
 import { store } from "@/stores/store";
 
 interface Tag {
-  _id: string;
+  id: string;
   title: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
 }
 
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  initialValue?: { id: string; title: string }[];
+  onChange: (data: { name: string; value: { id: string }[] }) => void;
 }
 
-export function SelectComponentType({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+export function SelectComponentType({ initialValue = [], onChange }: SelectCategoryTypeProps) {
+  const { metrics, fetchComponents } = store((state) => ({
+    metrics: state.metrics,
+    fetchComponents: state.fetchComponents,
+  }));
 
+  const [selectedValue, setSelectedValue] = useState<string[]>([]);
 
-  const { metrics } = store();
-
+  // Fetch components if needed
   useEffect(() => {
-    setTags(metrics.components.data);
-    console.log(metrics.components.data);
-  }, []);
+    if (!metrics.components.data.length) {
+      fetchComponents();
+    }
+  }, [metrics.components.data.length, fetchComponents]);
 
+  // Set selected values when data and value are both available
+  useEffect(() => {
+    if (initialValue?.length && metrics.components.data.length) {
+      const ids = initialValue.map((val) => val.id);
+      setSelectedValue(ids);
+    }
+  }, [initialValue, metrics.components.data]);
 
+  // Handle select change
   const handleChange = (selected: string[]) => {
-    const data = {
+    setSelectedValue(selected);
+    onChange({
       name: "componentType",
-      value: selected,
-    };
-    value(data);
+      value: selected.map((id) => ({ id })),
+    });
   };
 
-  useEffect(() => {
-    const options = tags.map(tag => ({
-      value: tag.name,
-      label: tag.title,
-    }));
-    setOptions(options);
-  }, [tags]);
-
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
-    }
-  }, [initialValue]);
+  const options = metrics.components.data.map((tag: Tag) => ({
+    value: tag.id,
+    label: tag.title,
+  }));
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
-      placeholder="Pitch Deck Category"
+      value={selectedValue}
+      placeholder="Component Type"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );

@@ -1,73 +1,75 @@
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import { Select } from "antd";
-import { tagss } from "@/data/dummyDatas";
+import { store } from "@/stores/store";
 
 interface Tag {
   _id: string;
+  id: string;
+  title: string;
   name: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
 }
 
-interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+interface IdValue {
+  id: string;
 }
 
+interface SelectCategoryTypeProps {
+  value: (data: { name: string; value: IdValue[] }) => void;
+  initialValue: IdValue[] | IdValue;
+}
 export function SelectPageType({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { metrics, fetchTypes } = store((state) => ({
+    metrics: state.metrics,
+    fetchTypes: state.fetchTypes,
+  }));
 
-  const getTags = async () => {
-    try {
-      const response = await axios.get<{ tags: Tag[] }>("/tag/tags");
-      setTags(response.data.tags);
-      console.log(response.data.tags);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
+    const [selectedValue, setSelectedValue] = useState<string[]>([]); // Controlled state for value
   
 
   useEffect(() => {
-    getTags();
-  }, []);
+    // Fetch types if they are not already in the state
+    if (!metrics.types.data.length) {
+      fetchTypes();
+    }
+  }, [metrics.types.data, fetchTypes]);
 
   const handleChange = (selected: string[]) => {
-    const data = {
+    setSelectedValue(selected); // Update local state
+    value({
       name: "pageType",
-      value: selected,
-    };
-    value(data);
+      value: selected.map((id) => ({ id })),
+    });
   };
 
-  useEffect(() => {
-    const options = tagss.map(tag => ({
-      value: tag.name,
-      label: tag.name,
-    }));
-    setOptions(options);
-  }, [tags]);
+  // Generate options based on types data
+  const options = metrics.types.data.map((tag: Tag) => ({
+    value: tag.id,
+    label: tag.title,
+  }));
 
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
-    }
-  }, [initialValue]);
+      useEffect(() => {
+        if (initialValue) {
+          const ids = Array.isArray(initialValue)
+            ? initialValue.map((item) => item.id)
+            : [initialValue.id];
+          setSelectedValue(ids);
+        }
+      }, [initialValue]);
+  
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
-      placeholder="Pitch Deck Category"
+      value={selectedValue} // Controlled value      defaultValue={Array.isArray(initialValue) ? initialValue : [initialValue]}
+      placeholder="Select Page Type"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
     />
   );

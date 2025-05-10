@@ -45,18 +45,36 @@ const config: Config = {
       },
     },
     colors: {
-      "myGreen-400": "#21AB68",
-      "green":{
-        500:  "#3E7B52",
-        600:  "#061F13",
+      'blue': {
+        10: "#F5FAFF",
+        200: "#0A69DB",
+        300: "#338FFF",
+        400: "#0275FF",
+        500: "#0065E0",
+        900: "#001229",
+        'Bg': 'linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.00) 100%), #0A69DB)',
+        
       },
-      "grey":{
-        800:  "#2D2D2D",
-        900:  "#101828",
+      'grey': {
+        10: "#F9F9F9",
+        50: "#EDEDED",
+        100: "#D7D7D7",
+        200: "#BFBFBF",
+        500: "#757575",
+        600: "#636363",
+        700: "#484848",
+        800: "#2D2D2D",
+        900: "#1C1C1C",
       },
-      "yellow-1": "#FEDF62",
-      red: "#FF6464",
-      "white": "#ffffff",
+      'myGreen-400': "#21AB68",
+      'green-500': "#3E7B52",
+      'green-600': "#3E7B52",
+      'green-400': '#21AB68',
+      'error': '#E03C00',
+      'borderDefault': '#E8E8EA',
+      'alabaster': '#F8F8F1',
+      'borderBgHover': '#F9F9F9',
+      'disabledButton': 'linear-gradient(180deg, rgba(0, 12, 20, 0.00) 3.13%, rgba(0, 12, 20, 0.03) 96.87%), var(--white, #FFF)'
     },
     fontSize: {
       "12": [

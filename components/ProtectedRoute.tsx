@@ -2,7 +2,7 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname  } from 'next/navigation';
 import { store } from '@/stores/store';
 
 interface ProtectedRouteProps {
@@ -13,25 +13,29 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const {token} =  store()
+  const pathname = usePathname(); // Get current route
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!token);
   useEffect(() => {
     // Check for the authentication cookie
     // const authToken = document.cookie.split('; ').find(row => row.startsWith('authToken='));
     const authToken = token
+    const unprotectedRoutes = ['/login', '/signup']; // Allow these routes without redirect
 
-    if (authToken) {
-      setIsAuthenticated(true);
-      console.log(authToken)
-    } else {
+    if (!authToken  && !unprotectedRoutes.includes(pathname)) {
+      console.log(unprotectedRoutes.includes(pathname))
       router.push('/login');
+      // console.log(authToken)
+    } else {
+      setIsAuthenticated(true);
     }
 
     setLoading(false);
   }, [router, token]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  // if (loading) {
+  //   return <p>Loading...</p>;
+  // }
 
   if (!isAuthenticated) {
     return 

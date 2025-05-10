@@ -1,68 +1,64 @@
 import React, { useEffect, useState } from "react";
-import axios from "@/lib/axios";
 import { Select } from "antd";
 import { store } from "@/stores/store";
 
 interface Tag {
-  _id: string;
+  id: string;
   title: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+
 }
 
 interface SelectCategoryTypeProps {
-  value: (data: { name: string; value: string[] }) => void;
-  initialValue: string[];
+  initialValue?: { id: string; title: string }[];
+  onChange: (data: { name: string; value: { id: string }[] }) => void;
 }
 
-export function SelectIndustry({ value, initialValue }: SelectCategoryTypeProps) {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+export function SelectIndustry({ initialValue = [], onChange }: SelectCategoryTypeProps) {
+  const { metrics, fetchIndustries } = store((state) => ({
+    metrics: state.metrics,
+    fetchIndustries: state.fetchIndustries,
+  }));
 
-
-  const { metrics } = store();
+  const [selectedValue, setSelectedValue] = useState<string[]>([]);
 
   useEffect(() => {
-    setTags(metrics.industries.data);
-    console.log(metrics.industries.data);
-  }, []);
+    if (!metrics.industries.data.length) {
+      fetchIndustries();
+    }
+  }, [metrics.industries.data, fetchIndustries]);
 
+   useEffect(() => {
+  if (initialValue?.length && metrics.industries.data.length) {
+    const ids = initialValue.map((val) => val.id);
+    setSelectedValue(ids);
+  }
+}, [initialValue, metrics.industries.data]);
 
-  const handleChange = (selected: string[]) => {
-    const data = {
+  const handleChange = (ids: string[]) => {
+    setSelectedValue(ids);
+    onChange({
       name: "industry",
-      value: selected,
-    };
-    value(data);
+      value: ids.map((id) => ({ id })),
+    });
   };
 
-  useEffect(() => {
-    const options = tags.map(tag => ({
-      value: tag.name,
-      label: tag.name,
-    }));
-    setOptions(options);
-  }, [tags]);
-
-  // Update selected value when initialValue prop changes
-  useEffect(() => {
-    if (initialValue && initialValue.length > 0) {
-      handleChange(initialValue);
-    }
-  }, [initialValue]);
+  const options = metrics.industries.data.map((tag: Tag) => ({
+    value: tag.id,
+    label: tag.title,
+  }));
 
   return (
     <Select
       className="h-12"
       mode="multiple"
-      value={initialValue}
-      placeholder="Pitch Deck Category"
+      value={selectedValue}
+      placeholder="Select Industry"
       onChange={handleChange}
       options={options}
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       maxTagCount="responsive"
+      loading={!metrics.industries.data.length}
     />
   );
 }
